@@ -24,6 +24,9 @@ dependencies:
   # Local Storage (Watchlist)
   shared_preferences: ^2.3.3
 
+  # HTTP client for FData API server
+  http: ^1.6.0
+
   # Icons & UI
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.0.10+1

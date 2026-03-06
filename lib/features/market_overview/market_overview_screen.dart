@@ -10,8 +10,9 @@ class MarketOverviewScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final indices = ref.watch(marketIndexProvider);
-    final boardAsync = ref.watch(priceBoardProvider);
+    final indicesAsync = ref.watch(marketIndexProvider);
+    final boardAsync   = ref.watch(priceBoardProvider);
+    final indices      = indicesAsync.valueOrNull ?? [];
 
     return Scaffold(
       backgroundColor: AppColors.background,

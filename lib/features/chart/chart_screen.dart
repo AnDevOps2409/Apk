@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/providers/stock_providers.dart';
 import '../../core/models/stock_quote.dart';
+import '../../core/models/data_source.dart';
+
 
 class ChartScreen extends ConsumerStatefulWidget {
   final String symbol;
@@ -21,11 +23,18 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
   List<Candle> _candles = [];
   List<Candle> _candles2 = [];
 
-  static const _timeframes = ['1p', '5p', '15p', '1h', '1D', '1W'];
+  static const _timeframes = ['15m', '30m', '1H', '2H', 'EOD'];
+
+  // Map label UI sang timeframe param cho API
+  static const _tfApiMap = {
+    '15m': '15m', '30m': '30m', '1H': '1H', '2H': '2H', 'EOD': 'EOD',
+  };
 
   @override
   void initState() {
     super.initState();
+    _timeframe = '15m';
+    // Mock candles: fallback khi dung realtime mode
     _candles = _generateCandles(widget.symbol);
   }
 
@@ -56,7 +65,30 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mode      = ref.watch(dataSourceModeProvider);
     final boardAsync = ref.watch(priceBoardProvider);
+
+    // Load candles tu FData neu dung FData mode
+    if (mode == DataSourceMode.fdata) {
+      final tfApi = _tfApiMap[_timeframe] ?? '15m';
+      final candlesAsync = ref.watch(
+        candleProvider(CandleArgs(widget.symbol, tfApi)),
+      );
+      candlesAsync.whenData((rawList) {
+        final converted = rawList.map((r) => Candle(
+          date: r.dateTime,
+          high: r.high, low: r.low,
+          open: r.open, close: r.close,
+          volume: r.volume.toDouble(),
+        )).toList();
+        if (converted.isNotEmpty && converted != _candles) {
+          // Update state without calling setState during build
+          Future.microtask(() {
+            if (mounted) setState(() => _candles = converted);
+          });
+        }
+      });
+    }
     StockQuote? quote;
     boardAsync.whenData((quotes) {
       try {

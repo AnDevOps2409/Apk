@@ -4,6 +4,7 @@ import '../../features/price_board/price_board_screen.dart';
 import '../../features/chart/chart_screen.dart';
 import '../../features/watchlist/watchlist_screen.dart';
 import '../../features/market_overview/market_overview_screen.dart';
+import '../../features/settings/settings_screen.dart';
 import '../../features/shell/app_shell.dart';
 
 final appRouter = GoRouter(
@@ -14,21 +15,19 @@ final appRouter = GoRouter(
       routes: [
         GoRoute(
           path: '/market',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: MarketOverviewScreen(),
-          ),
+          pageBuilder: (context, state) => const NoTransitionPage(child: MarketOverviewScreen()),
         ),
         GoRoute(
           path: '/board',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: PriceBoardScreen(),
-          ),
+          pageBuilder: (context, state) => const NoTransitionPage(child: PriceBoardScreen()),
         ),
         GoRoute(
           path: '/watchlist',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: WatchlistScreen(),
-          ),
+          pageBuilder: (context, state) => const NoTransitionPage(child: WatchlistScreen()),
+        ),
+        GoRoute(
+          path: '/settings',
+          pageBuilder: (context, state) => const NoTransitionPage(child: SettingsScreen()),
         ),
       ],
     ),
