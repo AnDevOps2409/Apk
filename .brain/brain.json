@@ -1,0 +1,50 @@
+{
+    "meta": {
+        "schema_version": "1.1.0",
+        "awf_version": "3.3.0"
+    },
+    "project": {
+        "name": "dnse_stock_app",
+        "type": "Android Flutter App",
+        "status": "planning_and_setup"
+    },
+    "tech_stack": {
+        "frontend": {
+            "framework": "Flutter",
+            "language": "Dart",
+            "state_management": "Riverpod",
+            "charts": "candlesticks / syncfusion",
+            "websocket": "web_socket_channel"
+        },
+        "backend": {
+            "api": "DNSE OpenAPI SDK"
+        },
+        "database": {
+            "local": "shared_preferences"
+        }
+    },
+    "database_schema": {
+        "summary": "Lưu trữ dữ liệu Watchlist dưới dạng local storage"
+    },
+    "api_endpoints": [],
+    "business_rules": [
+        "Ứng dụng chỉ có Phase 1: Bảng giá, Biểu đồ, Split View, Watchlist, Market Overview",
+        "Split view chia theo chiều dọc (trên/dưới) phù hợp màn hình mobile"
+    ],
+    "features": [
+        "Bảng giá real-time",
+        "Biểu đồ nến OHLCV",
+        "Split View (2 biểu đồ cùng lúc trên/dưới)",
+        "Watchlist (Danh sách theo dõi)",
+        "Market Overview (VNINDEX, VN30)"
+    ],
+    "knowledge_items": {
+        "patterns": [],
+        "gotchas": [
+            "Terminal có thể không nhận lệnh 'flutter' ngay sau khi thêm vào danh sách biến môi trường, cần sử dụng đường dẫn tuyệt đối hoặc khởi động lại IDE/Terminal"
+        ],
+        "conventions": [
+            "Mã chứng khoán DNSE phải viết HOA (VD: VCB, HPG)"
+        ]
+    }
+}
