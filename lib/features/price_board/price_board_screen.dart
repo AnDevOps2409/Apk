@@ -18,6 +18,18 @@ class _PriceBoardScreenState extends ConsumerState<PriceBoardScreen> {
   String _filter = '';
   final _searchCtrl = TextEditingController();
 
+  // Kích thước các cột (Tổng khoảng 670px)
+  static const double sw = 80;  // Symbol
+  static const double pw = 70;  // Price
+  static const double cw = 60;  // Change
+  static const double cpw = 60; // Change %
+  static const double vw = 80;  // Volume
+  static const double hw = 60;  // High
+  static const double lw = 60;  // Low
+  static const double rw = 60;  // Ref (TC)
+  static const double cew = 50; // Ceiling
+  static const double flw = 50; // Floor
+
   @override
   void dispose() {
     _searchCtrl.dispose();
@@ -74,27 +86,38 @@ class _PriceBoardScreenState extends ConsumerState<PriceBoardScreen> {
               ? quotes
               : quotes.where((q) => q.symbol.contains(_filter)).toList();
 
-          return Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: filtered.isEmpty
-                    ? Center(
-                        child: Text(
-                          'Không tìm thấy "$_filter"',
-                          style: const TextStyle(color: AppColors.textSecondary),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: filtered.length,
-                        itemExtent: 52,
-                        itemBuilder: (ctx, i) => _StockRow(
-                          quote: filtered[i],
-                          onTap: () => context.push('/chart/${filtered[i].symbol}'),
-                        ),
-                      ),
+          if (filtered.isEmpty) {
+            return Center(
+              child: Text(
+                'Không tìm thấy "$_filter"',
+                style: const TextStyle(color: AppColors.textSecondary),
               ),
-            ],
+            );
+          }
+
+          // Bọc toàn bộ Header và ListView vào SingleChildScrollView cuộn ngang
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              width: sw + pw + cw + cpw + vw + hw + lw + rw + cew + flw + 16, // +16 padding
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filtered.length,
+                      itemExtent: 44, // Giảm chiều cao row lại cho gọn giống TradingView
+                      itemBuilder: (ctx, i) => _StockRow(
+                        quote: filtered[i],
+                        isEven: i % 2 == 0,
+                        onTap: () => context.push('/chart/${filtered[i].symbol}'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -104,25 +127,30 @@ class _PriceBoardScreenState extends ConsumerState<PriceBoardScreen> {
   Widget _buildHeader() {
     return Container(
       color: AppColors.surface,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         children: [
-          headerCell('Mã CK', flex: 2, field: SortField.symbol),
-          headerCell('Giá', flex: 2, field: SortField.price, textAlign: TextAlign.right),
-          headerCell('+/-', flex: 2, field: SortField.change, textAlign: TextAlign.right),
-          headerCell('%', flex: 2, field: SortField.change, textAlign: TextAlign.right),
-          headerCell('KL (CP)', flex: 3, field: SortField.volume, textAlign: TextAlign.right),
+          headerCell('Mã CK',   width: sw,  field: SortField.symbol),
+          headerCell('Khớp',    width: pw,  field: SortField.price, textAlign: TextAlign.right),
+          headerCell('+/-',     width: cw,  field: SortField.change, textAlign: TextAlign.right),
+          headerCell('%',       width: cpw, field: SortField.change, textAlign: TextAlign.right),
+          headerCell('Tổng KL', width: vw,  field: SortField.volume, textAlign: TextAlign.right),
+          headerCell('Cao',     width: hw,  field: null, textAlign: TextAlign.right),
+          headerCell('Thấp',    width: lw,  field: null, textAlign: TextAlign.right),
+          headerCell('TC',      width: rw,  field: null, textAlign: TextAlign.right),
+          headerCell('Trần',    width: cew, field: null, textAlign: TextAlign.right),
+          headerCell('Sàn',     width: flw, field: null, textAlign: TextAlign.right),
         ],
       ),
     );
   }
 
-  Widget headerCell(String label, {required int flex, required SortField field, TextAlign textAlign = TextAlign.left}) {
-    final active = _sortField == field;
-    return Expanded(
-      flex: flex,
+  Widget headerCell(String label, {required double width, SortField? field, TextAlign textAlign = TextAlign.left}) {
+    final active = field != null && _sortField == field;
+    return SizedBox(
+      width: width,
       child: GestureDetector(
-        onTap: () {
+        onTap: field == null ? null : () {
           setState(() {
             if (_sortField == field) {
               _ascending = !_ascending;
@@ -163,9 +191,10 @@ class _PriceBoardScreenState extends ConsumerState<PriceBoardScreen> {
 
 class _StockRow extends StatelessWidget {
   final StockQuote quote;
+  final bool isEven;
   final VoidCallback onTap;
 
-  const _StockRow({required this.quote, required this.onTap});
+  const _StockRow({required this.quote, required this.isEven, required this.onTap});
 
   Color get _priceColor {
     if (quote.isCeiling) return AppColors.ceiling;
@@ -182,40 +211,34 @@ class _StockRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
+          color: isEven ? Colors.transparent : AppColors.surfaceVariant.withValues(alpha: 0.3),
           border: Border(
-            bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5),
+            bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.2), width: 0.5),
           ),
         ),
         child: Row(
           children: [
             // Mã CK
-            Expanded(
-              flex: 2,
+            SizedBox(
+              width: _PriceBoardScreenState.sw,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     quote.symbol,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  Text(
-                    quote.exchange,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w800,
+                      color: quote.isCeiling ? AppColors.ceiling : quote.isFloor ? AppColors.floor : AppColors.textPrimary,
                     ),
                   ),
                 ],
               ),
             ),
             // Giá khớp
-            Expanded(
-              flex: 2,
+            SizedBox(
+              width: _PriceBoardScreenState.pw,
               child: Text(
                 quote.priceStr,
                 textAlign: TextAlign.right,
@@ -223,36 +246,84 @@ class _StockRow extends StatelessWidget {
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: _priceColor,
+                  fontFamily: 'monospace',
                 ),
               ),
             ),
             // Thay đổi
-            Expanded(
-              flex: 2,
+            SizedBox(
+              width: _PriceBoardScreenState.cw,
               child: Text(
                 quote.changeStr,
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   fontSize: 12,
                   color: _priceColor,
+                  fontFamily: 'monospace',
                 ),
               ),
             ),
             // % thay đổi
-            Expanded(
-              flex: 2,
+            SizedBox(
+              width: _PriceBoardScreenState.cpw,
               child: _PctBadge(pct: quote.changePercent, color: _priceColor),
             ),
             // Khối lượng
-            Expanded(
-              flex: 3,
+            SizedBox(
+              width: _PriceBoardScreenState.vw,
               child: Text(
                 quote.volumeStr,
                 textAlign: TextAlign.right,
                 style: const TextStyle(
-                  fontSize: 11,
-                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  color: AppColors.textPrimary,
+                  fontFamily: 'monospace',
                 ),
+              ),
+            ),
+            // Cao
+            SizedBox(
+              width: _PriceBoardScreenState.hw,
+              child: Text(
+                quote.highStr,
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontSize: 12, color: AppColors.increase, fontFamily: 'monospace'),
+              ),
+            ),
+            // Thấp
+            SizedBox(
+              width: _PriceBoardScreenState.lw,
+              child: Text(
+                quote.lowStr,
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontSize: 12, color: AppColors.decrease, fontFamily: 'monospace'),
+              ),
+            ),
+            // TC
+            SizedBox(
+              width: _PriceBoardScreenState.rw,
+              child: Text(
+                quote.referenceStr,
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontSize: 12, color: AppColors.reference, fontFamily: 'monospace'),
+              ),
+            ),
+            // Trần
+            SizedBox(
+              width: _PriceBoardScreenState.cew,
+              child: Text(
+                quote.ceilingStr,
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontSize: 12, color: AppColors.ceiling, fontFamily: 'monospace'),
+              ),
+            ),
+            // Sàn
+            SizedBox(
+              width: _PriceBoardScreenState.flw,
+              child: Text(
+                quote.floorStr,
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontSize: 12, color: AppColors.floor, fontFamily: 'monospace'),
               ),
             ),
           ],
@@ -269,7 +340,7 @@ class _PctBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sign = pct >= 0 ? '+' : '';
+    final sign = pct > 0 ? '+' : '';
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
@@ -279,11 +350,12 @@ class _PctBadge extends StatelessWidget {
           borderRadius: BorderRadius.circular(3),
         ),
         child: Text(
-          '$sign${pct.toStringAsFixed(2)}%',
+          '$sign${pct.toStringAsFixed(1)}%',
           style: TextStyle(
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: FontWeight.w600,
             color: color,
+            fontFamily: 'monospace',
           ),
         ),
       ),

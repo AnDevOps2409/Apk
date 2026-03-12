@@ -66,11 +66,17 @@ class StockQuote {
   bool get isFloor => price == floor;
   bool get isReference => change == 0;
 
-  /// Format giá theo chuẩn Việt Nam (VD: 45.5 → "45.50")
-  static final _priceFormat = NumberFormat('#,##0.00', 'vi_VN');
-  static final _pctFormat = NumberFormat('+#,##0.00;-#,##0.00', 'en_US');
+  /// Format giá theo chuẩn Việt Nam (bỏ ,00 nếu là số chẵn)
+  static final _priceFormat = NumberFormat('#,##0.####', 'vi_VN');
+  static final _pctFormat = NumberFormat('+#,##0.##;-#,##0.##', 'en_US');
   static final _volFormat = NumberFormat('#,###', 'vi_VN');
 
+  String get referenceStr => _priceFormat.format(reference);
+  String get ceilingStr => _priceFormat.format(ceiling);
+  String get floorStr => _priceFormat.format(floor);
+  String get openStr => _priceFormat.format(open);
+  String get highStr => _priceFormat.format(high);
+  String get lowStr => _priceFormat.format(low);
   String get priceStr => _priceFormat.format(price);
   String get changeStr => _pctFormat.format(change);
   String get changePctStr => '${_pctFormat.format(changePercent)}%';
@@ -148,10 +154,10 @@ class MarketIndex {
 
   bool get isUp => change >= 0;
 
-  static final _fmt = NumberFormat('#,##0.00', 'vi_VN');
+  static final _fmt = NumberFormat('#,##0.##', 'vi_VN');
   String get valueStr => _fmt.format(value);
   String get changeStr {
     final sign = change >= 0 ? '+' : '';
-    return '$sign${_fmt.format(change)} ($sign${NumberFormat('+#,##0.00;-#,##0.00').format(changePercent)}%)';
+    return '$sign${_fmt.format(change)} ($sign${NumberFormat('+#,##0.##;-#,##0.##').format(changePercent)}%)';
   }
 }

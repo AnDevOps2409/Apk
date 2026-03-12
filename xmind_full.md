@@ -1,0 +1,416 @@
+
+
+============================================================
+## FILE: VSA
+============================================================
+# VSA
+  - VSA cơ bản
+    - 1. Khối lượng | 2. Spread: (biên độ của thanh giá) tính từ Low đến High | 3. Vị trí giá đóng cửa | 4. Bối cảnh thị trường (xu hướng)
+  - 2. Upthurst | Tín hiệu SOW
+    - 1. Khối lượng rất lớn | 2. Biên độ giá lớn | 3. Đóng cửa gần mức thấp nhất | 4. Trong xu hướng tăng
+    - Báo hiệu:  |  | - Xu hướng tăng nhiều khả năng sẽ kết thúc, bắt đầu quá trình phân phối | - Smart money nỗ lực bán xuống trước lực mua mạnh mẽ từ thị trường
+    - Shakeout # Upthurst | - Shakeout xuất hiện ở đầu xu hướng tăng, giống Upthurst nhưng chỉ tăng 30%. Sau khi xuất hiện khả năng vượt lên đỉnh gần đó, vol cũng cao. Sau đó tạo tích luỹ, độ biến động thấp, tiết cung rồi tạo Breakout bar => Mua lại  | - Upthurst là tăng đã rất nhiều rồi, 100%  | Độ biến động rất mạnh -> Phân phối
+  - 3. Test for Supply/No Supply
+    - Khái niệm: Một hoặc một vài đợt giảm yếu hoặc giảm vào đầu phiên nhưng tăng lại vào cuối phiên với khối lượng thấp/ rất thấp |  | Mục đích: Kiểm tra hoạt động và tâm lý của nhà đầu tư nhỏ lẻ trước khi tăng theo xu hướng
+    - Cung cầu không phải là người mua và người bán, là người sẵn sàng bán giá thấp hơn hoặc mua lại giá cao hơn.
+    - Đặc điểm nhận dạng Test for Supply: |  | - Giá giảm rồi lại tăng | - Spread nhỏ | - Khối lượng rất nhỏ | - Giá đóng cửa nằm ở nửa trên của thanh nến
+    - Đặc điểm nhận dạng No Supply: |  | - Nến giảm | - Spread nhỏ | - Khối lượng rất nhỏ | - Giá đóng cửa nằm ở một nửa dưới
+    - Có nên mua ngay? |  | - TFS và NS là tín hiệu mua tốt nếu được nhận diện đúng | - Điểm đặt SL rất nhỏ => Giảm rủi ro cho NĐT | - Tăng sự tự tin vì mua sớm
+  - 4. Shakeout
+    - Khái niệm:  | Một hoặc vài đợt giảm mạnh kèm theo KL lớn khiến cho đám đông trên TT bán tháo trong hoảng loạn, thậm chí trắng bên mua |  | Mục đích: Kheién cho những người đang có vị thế mua trong xu hướng tăng hoặc trong vùng tích luỹ phải thoát hết bằng những giá rẻ hơn những phiên trước
+    - Đặc điểm nhận dạng: |  | - Nến giảm | - Spread lớn hoặc tạo GAP | - KL lớn | - Lý tưởng nhất: nến rút chân | - Giảm mạnh nhất từ đỉnh sau đặt tăng đầu tiên từ vùng tích luỹ | - Tin xấu từ truyền thông
+    - Hành động Shakeout thường xuất hiện ở đâu |  | - Tái tích luỹ trong xu hướng tăng | - Vùng điều chỉnh sâu | - Pharce C trong vùng tích luỹ lớn
+  - 5. Làm sao để biết vùng tích luỹ
+    - Đặc điểm nhận dạng vùng tích luỹ |  | - Các MA đan xen nhau | - Càng về sau khối lượng càng thấp
+    - Đầu giai đoạn tích luỹ | Nhiều tin tiêu cực nhưng người bán không bán thấp hơn
+    - Cuối giai đoạn tích luỹ | - Tạo đáy cao hơn | - Tăng KL trước khi nổ breakout | - Test thường xuyên tại kháng cực | - MA dài hạn chuyển trạng thái tăng | - Thanh giá tăng nhiều hơn thanh giá giảm | - Thanh giá tăng có khối lượng lớn hơn
+  - 6. Vùng phân phối
+    - Đặc điểm nhận dạng vùng phân phối |  | - Thời gian Phân phối thường nhanh hơn vùng tích luỹ   | - Xuất hiện những phiên giảm với khối lượng kỷ lục
+    - Giai đoạn đầu vùng phân phối:  |  | - Xuất hiện nhiều tin tốt | - MA dài hạn vẫn còn tăng | - Giao động mạnh bất thường | - Khối lượng cao nhưng giá không tăng thêm
+    - Cuối giai đoạn phân phối |  | - Tạo các đỉnh thấp hơn | - KL tăng trước khi bùng nổ giảm | - Thanh giá giảm nhiều hơn thanh giá tăng  | - Test hỗ trợ thường xuyên | - Thanh giá giảm có KL cao hơn | - Tin tốt tràn ngập nhưng giá ko vượt đỉnh
+  - Phân biệt TL - PP
+    - Mẫu hình Vai đầu vai | Bản chất: Vai trai là BC, đám đông đang đổ xô, mua bằng mọi giá làm cho khối lượng ở vai trái rất cao. | Sau đó tạo UTAD, khối lượng vẫn cao nhưng không cao bằng vai trái, không đủ lượng cầu | => Đỉnh sau cao hơn đỉnh trước, KL thấp hơn đinrh trước => bán ngay | Phiên tạo phải là test lại cầu trước khi giảm xuống, KL thấp hơn nữa  |  | Giá đường viền cổ được tạo từ AR. Vai phải ko cần thiết bằng vai trái, có thể thấp hơn hoặc cao hơn.
+  - 4 bước lựa chọn
+    - 1. Chọn ngành/nhóm CP có sức mạnh lớn hơn TT | 2. Lọc ra CP mạnh nhất trong nhóm | 3. Tìm kiếm các tín hiệu bằng các mẫu hình và KL | 4. Tính toán tỷ lệ R:R hợp lý trước khi quyết định mua/bán khống
+    - 1. Cách xác định sức mạnh: | - So sánh cổ phiếu với thị trường chung, tính ra một chỉ số mới | - Tính điểm RS của nhóm ngành/cổ phiếu riêng lẻ | - So sánh đỉnh/đáy của cổ phiếuriêng lẻ với thị trường chung | - So sánh từng con sóng của CP riêng lẻ với thị trường chung
+  - Wyckoff nhận biết và kiếm lợi nhuận từ vùng tích lũy
+    - Pha A: Giai đoạn chấm dứt xu hướng giảm trước đó.  | 1. PS: Cá mập can thiệp | 2. SC: đáy được hình thành (ko bị phá) | 3. AR: xác định dựa vào SC | 4. ST: Backtest nhẹ nhàng |  | Pha B: Tích luỹ - tạo ra Nguyên nhân |  | 1. Tạo UATD: Giá breakout khỏi kênh trên được xác định bởi AR nhưng ngay lập tức quay trở về TR. Hành động này được xem là sự kiểm định lại cân bằng cung cầu tại vùng kháng cực | 2. SOW: Giá breakdown khỏi kênh dưới được xác định bởi SC nhưng ngay lập tức quay trở lại TR. Hành động này được xem là sự kiểm định lại cung cầu ở vùng hỗ trợ.  |  | Pha C: Loaji bỏ NĐT nhỏ lẻ |  | 1. Spring/Shakeout: Giảm xuống dưới SC và quay trở lại TR.  | 2. Test: kiểm định lại cung nhiều lần trong nhịp tăng sau khi xuất hiện Spring. Một nhịp test thành công khi có Spring/Shakeout sẽ tạo đáy cao hơn với KL nhỏ |  | Pha D: Sự thay đổi đặc tính của giá | 1. SOS: Sau cú Spring/Shakeout, dấu hiệu của sức mạnh là một nhịp tăng vượt qua vùng kháng cự với các bến dao động lớn, KL tăng lên và tốc độ tăng giá cũng nhanh lên | 2. LPS: Trong quá trình tăng lên, sẽ xuất hiện 1 hoặc vài nhịp backtest để tạo đáy sau cao hơn đáy trước. Khi giá không giảm xuống thấp hơn những đáy này, ta có LPS. Mặt khác, 1 cú Spring/Shakeout với giá không thể phá xuống kênh dưới được cũng coi như là LPS. Điều này thể hiện lực cầu rất mạnh | 3. Backup Action - BU: là mọt chuõi hành động giá nhảy cảm, xảy ra sau SOS. Nguyên nhân từ việc nhà cái muốn kiểm định lần nữa cân bằng cung cầu, lần này là xung quanh vùng kháng cự. BU có thể xuất hiện nhiều dạng, 1 Mini TR, 1 vài nến giảm nhé với KL thấp hoặc thậm chí là 1 nhịp về sau lại TR trước đó. | BU là một giai đoạn quan trọng nhất, phải thể hiện được quyết tâm hấp thụ hết toàn bộ lượng CP bán ra bởi nhỏ lẻ
+  - Xác định đỉnh - đáy thị trường bằng phương pháp đọc hành động giá (Price Action)
+  - 3 phương pháp đọc thanh khoản Vol
+    - Thanh khoản nhận diện đảo chiều
+    - Thanh khoản nhận diện breakout
+    - Thanh khoản nhận diện pullback |  | Sóng pullback thanh khoản thấp hơn sóng đẩy
+      - Trong sóng lớn
+      - Trong sóng nhỏ | <55 ngày trở xuống
+  - Phối hợp Vol và Spring
+    - Spring #3: Nỗ lực giảm giá sẽ kết thúc ở mức hỗ trợ được hình thành từ SC hoặc ST ở pha B với Vol thấp
+    - Spring #2: Nỗ lực giảm sẽ kết thúc dưới mức hỗ trợ hình thành từ SC hoặc ST ở pha B với vol vừa phải | Vol hình thành hình tam giá, A -> B giảm dần, B -> C lớn dần
+    - Spring #1: Nỗ lực giảm sẽ giá kết thúc khi giá breakout dưới mức hỗ trợ hình thành từ SC hoặc ST ở pha B với vol cực đại
+  - Wyckoff nhận biết vùng phân phối
+    - Pha A nhận diện BC, AR, ST | Pha B nhận diện SOW (test AR vol thấp, bật lên BC), UT | Pha C: UTAD, Test, tích lũy... | Pha D: Xuất hiện xu hướng giảm, Đáy sau thấp hơn đáy trước, đỉnh sau thấp hơn đỉnh trước... | Tạo thêm các SOW... | Pha E... |  | Chạm trendline 3 lần bán ngay lập tức
+  - Sức mạnh tương đối RS
+    - Được sử dụng nhiều trong phương pháp: |  | - Đầu tư theo đà tăng trưởng | - Phương pháp Wyckoff/VSA | - Phương pháp đánh theo Breaout/Pullback theo TA | - Phân tích liên thị trường/ cơ bản
+    - 4 cách sử dụng: | - So sánh giá CP với giá TT chung | - Chia giá của TT này cho giá của TT chung để theo dõi sức mạnh so với TT chung  | - So sánh giá của hai thị trường
+    - Các phương pháp phân tích: | - Mô hình giá | - Hành động giá breakout/pullback | - Đường xu hướng/kháng cự/hỗ trợ | - Chỉ báo | - Phân kỳ | - Elliot, Ichimoku, Fibonacci
+
+
+============================================================
+## FILE: MauHinh
+============================================================
+# Các mẫu hình | - Mẫu hình mà biến động mạnh: Nến to không ổn định, nhiều nhỏ lẻ -> Lỏng | - Mẫu hình mà biến động nhỏ, nền nã -> Chặt -> lái cầm nhiều | - Mẫu hình thời gian càng lâu, càng dài thì tăng càng mạnh, đặc biệt 4-6 tháng sẽ nhân đôi | CP đi ngang 5 phiên k lên được thì sẽ gãy và test lại.
+  - Cốc tay cầm
+    - Phần tay cầm phải thể hiện Vol thấp -> rung rũ kiệt
+  - 2 đáy
+    - Đỉnh C là tù tù chữ ko thẳng đứng | Đáy sau thấp hơn đáy trước
+      - Có trường hợp tạo tay cầm thì mua ở điểm cắt qua ABC
+  - Wickoff
+    - Cổ phiếu đi ngang 4-6 thánghoặc hơn. Xong tự nhiên gãy xuống và phục hồi được => Mua điểm SOS
+  - Vai đầu vai ngược
+    - 1. Vai bên phải có thể thấp hơn vai bên trái, thường là bằng.  | (Vì thấp hơn là rõ bỏ được các NĐT kẹt bên trái luôn)
+    - 2. Mẫu hình thực tế sẽ nghiêng như này
+    - 3. Đôi khi vai phải đi ngang, không giũ
+    - 4. Hay xuất hiện khi thị trường giảm
+  - Gãy nền rũ bỏ |  | Thường về các nền hỗ trợ ngừng giảm. Lên 1 tí rồi lại test lại. Cân bằng được thì mua   |  | MWG: 2021
+  - Test lại đáy |  | - CP khi rơi và hồi lên. VND: 5/5/2025  | - Hồi lên và quay trở lại test đáy 1 lần nữa. hồi lên được gọi là cân bằng.
+  - Cân bằng:  | - Test đáy đến khi nào vol kiệt | - Khi cổ phiếu test xong và giữ được giá và hướng lên thì nó là cân bằng | - Điểm đáy là giá đóng cửa của phiên đáy đầu tiên |  | => Test đáy lại thành công hướng lên thì gọi là CB | - Test đáy 3 lần thì dám bắt |  | VHM 19/05/2025. Mua điểm 2 thanh hướng lên
+  - Kiến thức cơ bản
+    - Thế nào là nền giá?  |  | - Vùng đi ngang, kết phiên thẳng hàng với nhau, biên độ hẹp thì gọi nền giá chặt. Biên độ lỏng thì gọi là nền giá lỏng.  | - Nền giá vừa có thể là hỗ trợ/kháng cự
+    - Hỗ trợ/Kháng cự: | - Nền giá | - Đỉnh trước | - Đáy trước | - Gáp trước
+    - 1 CP đang đi lên mà gặp kháng cự: Cần tích luỹ trước kháng cự đó. nếu mà lên luôn thì thường quay lại test đỉnh rồi cân bằng sau đó mới lên được
+    - Bùng nổ theo đà:  |  | Xác nhận thị trường vào sóng |  | Ngày tạo đáy đầu tiên gọi là phiên 1 |  | - Phiên thấp nhất xuống sâu hơn và rút chân lên > 1 nửa |  | Bùng đổ theo đà: Thường xuất hiện ngày 4-8. 1 số 11-12. Xuất hiện càng muộn thì sóng càng càng yếu, tỉ lệ thất bại cao |  |  |  | VNINDex tăng trên 1,5%. KL chỉ cần cao hơn ngày hôm trước. Nếu biên độ càng mạnh thì sóng càng to.  |  | => vào 30% vào các con tăng trần vào cách nhanh nhất.  |  | Bùng nổ sai ít nhất 2 tuần mới rơi. |  | Trường hợp phiên 3 mới nổ thì phiên 1 - 2 phải tăng rất mạnh |  | PP bùng nổ phải lan toả khắp các nhóm ngành, chỉ kéo trụ thì là fail |  | Thị trường rơi chưa đủ nhịp từ 3-5 nhịp => nếu xuất hiện bùng nổ cũng dễ fail
+
+
+============================================================
+## FILE: Ichimoku
+============================================================
+# Ichimoku
+  - Cấu tạo | HH = Highest High | LL = Lowest Low
+    - Tenken-Sen = (HH + LL) / 2 | Sử dụng 9 Phiên
+    - Kijun-Sen = (HH + LL)/2  | Sử dụng 26 phiên
+    - Chikou-Span = Giá đóng cửa hôm nay | Được vẽ cho 26 phiên sau
+    - Senkou Span A = (Tenken-Sen + Kijun-Sen) / 2 | Được vẽ cho 26 phiên đầu
+    - Senkou Span B = (HH + LL) / 2 | Sử dụng 52 phiên | Được vẽ cho 26 phiên đầu
+    - Khoảng cách Senkou A và B được gọi là Kumo hay Cloud
+  - 1. Tenken-Sen = (HH + LL)/2  | SMA 9 |  | - Đường chuyển đổi | - Bám sát đường giá nhất | - Flat Tenken-Sen không chỉ thể hiện sự cân bằng về giá tốt hơn mà còn cho các mức hỗ trợ tốt hơn | - Ít tin cậy nhất trong 5 đường | - Dấu hiệu ban đầu của thay đổi xu hướng
+  - 2. Kijun- Sen |  | - Đường tiêu chuẩn | - Quan trọng  | - HT/KC uy tín hơn | - Xu hướng ngắn hạn | - Trung tâm của lực hấp dẫn - Hút giá về chính nó và đưa giá về trạng thái cân bằng
+  - 3. Chikou-Sen |  | - Đường trễ | - Biểu thị giá đóng cửa hiện tại là thời gian chuyển dịch ngược về 26 phiên đã qua  | - Nếu giá đóng cửa hiện tại (được mô tả bởi Chiko) thấp hơn so với giá của 26 phiên trước đây => Giá giảm và ngược lại  | - Nếu giá đóng cửa hiện tại (được mô tả bởi Chiko) cao hơn so với giá của 26 phiên trước đây => Giá tăng
+  - 4. Senkou Span A
+  - 4. Senkou Span B
+  - Mua
+    - Nếu Tenken-Sen cắt Kijun-Sen từ dưới lên => Tăng giá
+    - Mua theo tín hiệu giao cắt của giá và Kijun
+      - Tín hiệu mạnh | - Buy: Tín hiệu cắt tăng giá và vị trí giao cắt phía trên Kumo | - Sell: Tín hiệu cắt giảm giá và vị trí giao cắt dưới Kumo
+      - Tín hiệu trung bình | - Buy: Tín hiệu cắt tăng giá và vị trí giao cắt trong Kumo | - Sell: Tín hiệu cắt giảm giá và vị trí giao cắt trong Kumo
+      - Tín hiệu yếu | - Buy: Tín hiệu cắt tăng giá và vị trí giao cắt phía dưới Kumo | - Sell: Tín hiệu cắt giảm giá và vị trí giao cắt dưới trên Kumo
+      - Kết hợp Chikou trên là mạnh dưới là yếu
+      - Mở vị thế: Ngay tại vị trí giao cắt. | Để ý HT/K
+      - Đóng giao dịch: Khi Kijun Sen cắt đường giá theo hướng ngược lại
+      - Điểm dừng lỗ: Kijun đóng vai trò như một HT KC
+    - Mua theo Mây
+      - Mở vị thế:  | giá đóng cửa trên/dưới mây, theo hướng breakout | - cần đảm bảo vị trí breakout ko xuất phát từ một Flat top/bottom kumo (có khuynh hướng hút giá về phía nó)  | - Cần có sự xác nhận của Chikou, HT KC cũng như Span A B
+      - Đóng vị thế: Khi giá có xu hướng đảo chiều, Breakout theo hướng ngược lại hoặc chạm stoploss, hoặc chạm mục tiêu
+      - Cứ giao mây là đảo chiều
+
+
+============================================================
+## FILE: NenDaoChieu
+============================================================
+# Mẫu hình nến đảo chiều
+  - Dark Cloud Cover
+  - Ngôi sao
+    - Morning Star đảo chiều tại đáy
+      - Có thể là Doji
+    - Evening Start ở đỉnh
+    - Abandoned baby có Gap
+  - The Belt Hold
+  - Pin Bar
+    - Mô tả
+  - Engulfing
+  - Swing Point
+# Mẫu hình nến tiếp diễn
+  - Windows (Gap)
+    - Common GAP
+    - Break Gap | KL CAO
+    - Run Away GAP
+    - Gap kiệt sức
+  - Rising Three Methods
+    - Tương tự nhưng trường hợp giảm
+  - DOJI
+  - Tạo GAP quay lại test GAP ok đi lên
+  - Vùng giằng co
+    - Thành công
+      - Tín hiệu
+    - Thất bại
+  - MUA/BÁN
+    - 1 LÀ MUA Ở PHIÊN 2, 2 LÀ MUA Ở PHIÊN THỨ 3 LỆNH LIMIT
+  - QUY TRÌNH ĐÁNH GIÁ
+
+
+============================================================
+## FILE: GiauThoi
+============================================================
+# Bí kíp
+  - Buổi 2
+    - Giá - KL
+      - Giá tăng - KL tăng => Tốt
+      - Giá tăng - KL không tăng => Không tốt
+      - Giá giảm - KL thấp => Xấu => Không xấu lắm
+      - Giá giảm - KL tăng => Rất xấu
+      - Cần phải xem bức tranh toàn cảnh, cảm nhận từng người để đọc xem đang ở giai đoạn nào? Xe đang lên dốc hay xuống dốc...
+    - Quy luật cung cầu
+      - Khối lượng kiệt lại thì mới có thể tham gia vào CP
+      - Khăn nhiều nước phải giũ ra và vắt tiếp. Phải khi nào kiệt nước thì mới khô. Nên vào CP lúc khăn đã vắt kiệt nước.  | KL phải thấp | Mua xong thấy CP ko lên là chọn CP sai | Biên độ mỗi lần vắt là 1/2 | Nguồn cung càng xa thì càng yếu nên ok
+      - Nếu giá giảm, spread to mà vol bé thì là bo cung. Cảm giác ko đúng thì lướt qua.
+    - Cơ bản cần biết
+      - Kháng cự và hỗ trợ
+        - Hỗ trợ:  | - Đỉnh trước  | - Nền giá trước | - Đáy trước | - Gáp trước: 80% Thường sẽ lấp lại và cũng là hỗ trợ khi CP giảm lại, ko biết lúc nào lấp lại
+        - Kháng cự: Ngược hỗ trợ |  | 2 trường hợp: | Giũ bỏ, Tạo nền hoặc VCP trước kháng cự để xử lý kháng cự là rất tốt | Nếu CP vượt kháng cự luôn thì nó ko bao giờ lên luôn, sẽ phải quay lại để kiểm tra lại kháng cự
+      - Giao động lỏng là gì? Dấu hiệu không tốt  | Biên độ thấp là biên chặt => Tổ chức gom hàng  | Giao động lỏng là nhỏ lẻ quá nhiều. Biên độ loạn lên.
+      - Nền giá là gì?  | Những thanh đóng cửa gần nhau, chốt phiên đi ngang thì tạo nền giá. Loanh quanh đi ngang thì coi là 1 nền giá
+      - Bo cung là gì? Tích luỹ thì phải KL thấp, Giá và KL thiếu tự nhiên. Lái kiểm soát rất nhiều
+  - Buổi 1
+    - Hành vi cảm xúc nó không đổi -> Nó cứ lặp đi lặp lại
+    - Sợ hãi - Lòng tham - Hy vọng
+    - Bộ môn này chủ yếu là cách đọc hành vi và cảm xúc
+    - Luật chơi: Tổ chức và nhỏ lẻ tham gia vào cuộc chơi.  |  | THẰNG TỔ CHỨC LÀ THÀNH MẠNH.  | PHẢI HIỂU MÌNH ĐANG CHƠI VỚI AI. | ĐỪNG LẤY TRỨNG CHỌI ĐÁ. | Mình là thằng yếu, phải đưa hàng cho thằng mạnh, mình chỉ ăn ké, không được nghĩ mình là thằng mạnh.
+      - Tổ chức (70%) gồm quỹ, công ty CK, khối ngoại, chủ tịch cty, BigBoy... => nhiều tiền => Thay đổi được cả 1 xu hướng, rất kín tiếng => Giống như một con tàu lớn, ù lì, chậm chạp.
+      - Nhỏ lẻ (30%): YẾU => THẮNG YẾU NHƯNG TRỤ CUỐI CÙNG.  Đông, hung hãn, to mồm, thích thể hiện, không đoàn kết, dễ sợ hãi => Như tàu cano: rất nhanh và dễ xoay chuyển
+    - Không có CP nào
+    - Hiểu được giai đoạn của cổ phiếu thì sẽ là người chiến thắng.  | Thị trường sinh ra trong ảm đạm, lớn lên trong nghi ngờ, và chết bởi sự thoả mãn | Chỉ được chơi ở giai đoạn 2
+      - Giai đoạn 1: Tổ chức gom hãng, tích luỹ | Tổ chức phải chuẩn bị tiền, gom hàng dần ngày tháng. => Ảm đạm, chán, không kiếm được tiền, mất thời gian.   | => Tuyệt đối không đánh vào giai đoạn này
+        - Dấu hiệu nhận biết: Khối lượng phải thấp.  | vì mỗi ngày nó mua 1 ít.
+        - Thông thường gom hàng từ 4-6 tháng
+        - Gom quanh 1 mức giá trung bình
+        - Ví dụ: SSI tạo lập muốn mua giá 19 thì cứ kéo lên 22 sẽ đạp về 19 rồi gom tiếp
+      - Giai đoạn 2: Giai đoạn kiếm tiền, thú vị | Sau khi gom đủ hàng thì nó sẽ đánh lên.  | Ví dụ nó cầm 70% cổ phiếu rồi, 30% cho nhỏ lẻ đánh. Nó vẫn mua vào, đến lúc nào nó đạt target thì mới xả. | Lãi = Giá TB mua - Giá TB Bán.
+      - Giai đoạn 3: Giai đoạn phân phối, biên rất lỏng. lái trao hàng cho nhỏ lẻ, nhỏ lẻ rất hưng phấn.  | Ví dụ: Ko mong t7 cn, kéo trần liên tục, biến động rất lớn, trần sàn liên tục... | Càng lên cao gió càng to | Nó muốn bán 5 triệu cổ -> thì nó phải bán 10 triệu, rồi mua lại 5 triệu | Bán 5 = 10 - 5 = 15 (Khối lượng) | Cuối phiên chốt thấp nhất. | Thị trường ở vùng đỉnh có KL cao là như vậy
+      - Giai đoạn 4: Cách duy nhất là đứng ngoài | Đè giá xuống. Sau khi phân phối xong đạt target, lái còn ít hàng, giá nào nó cũng bán => đẩy giá xuống thấp nhất.  | Cổ phiếu càng về sau càng rơi mạnh, CTy thấy NĐT lỗ nhiều nên sẽ Call margin và Force Sell
+        - Bẫy giảm giá: | Quy luật 50/80
+          - 50% mã cổ phiếu giảm 80%
+          - 80% mã cô phiếu giảm 50%
+        - Tuyệt đối không trung bình giá xuống, sai thì cắt luôn
+    - Thị trường chung: Từ góc nhìn bao quát, thấy TTC mới ổn -> Tìm ngành nào ổn -> CP ổn -> Điểm mua ổn
+      - TTC ổn là TT có bùng nổ theo đà. TT bước vào một xu hướng mới Uptrend.  | Thay đổi xu hướng từ Down sang Uptrend.  | Tổ chức quay trở lại tham gia thị trường hay là nó vẫn thả trôi?
+        - Chỉ áp dụng với VNINDEX
+        - Phiên bùng nổ cần có sự lan toả giữa các ngành | Tất cả nhóm ngành của TT phải tăng trần hoặc ít nhất 1 vài dòng dẫn sẵn, 3-5 dòng tăng trần, Bank tăng nhẹ hoặc BĐS tăng xanh 3-4%... | Phải ghi lại nhật ký các ngành nào trần.
+        - Điều kiện cần:  | - Đó là phải có ngày thứ nhất tạo đáy. | - Rơi thấp nhất của đáy sau đó rút chân lên 2% của chỉ số (Nếu âm 2% rút về TC thì cũng được tính)
+        - Điều kiện đủ: | - Xuất hiện 1 phiên bùng nổ theo đà, từ ngày thứ 4 -> ngày thứ 8. Nếu xuất hiện muộn hơn 8-11 thì khả năng fail cao. | - VNINDEX phải > 1% là thấp nhất, chuẩn là > 1,5%. | - Khối lượng ít nhất là cao hơn ngày hôm trước, chuẩn thì cao hơn trung bình 10.
+        - Lưu ý: Khi thị trường rơi chưa đủ nhịp (Từ 3-5 nhịp) mà chỉ đang rơi 2 nhịp thì nếu có bùng nổ thì thường hay thất bại
+        - Bùng nổ không cần biết cứ múc 30% vào cổ phiếu mạnh nhất
+    - TT Sập thì tìm bùng nổ để tham gia lại
+  - Buổi 6: Mẫu hình VSA - nền giá CP 4-6 tháng | Pharse A + B không thể nhìn ra được | YẾU TỐ THỊ TRƯỜNG RẤT QUAN TRỌNG
+    - Pharse A
+      - Bình thường rơi tầm 3 nhịp lớn, rơi nhịp 2 sẽ có điểm PS có KL, tưởng có đáy rồi. Sau đó rơi tiếp. Sẽ có điểm SC => đáy có dòng tiền đỡ. Coi như cây thứ 1 tạo đáy.
+      - Khi hồi sẽ hồi lên 1 điểm cao nhất sẽ là AR. Từ điểm AR đến các điểm về sau sẽ là AR
+      - Điểm từ AR rơi xuống sẽ là ST
+    - Pharse B là thời gian vô định.  | Cứ thấy đi ngang.
+    - Pharse C
+      - Thủng hết các loại đáy, thủng cả SC => Điểm spring.  | Nếu không thủng và Test lại thành công và cân bằng được.  | DGC 19/4/2022 | Không phải mua ở chỗ Test hay Spring
+    - Pharse D: ĐIểm mua
+      - Vùng SOS | VCP cận đỉnh cũ. Loanh quanh là vùng trên đỉnh  | CTD tích luỹ 2 tuần, KL thấp lại. | SOS vol ko cần cạn kiệt quá, ko được cao quá là ko ổn, gần = cây nổ...
+      - Spring cần kiệt thôi
+    - Lọc cổ phiếu:  | Cảm giác về thị trường => Phân tích được thị trường => Tìm được sóng ngành
+      - Các cổ phiếu trong ngành, đi ngang, có mẫu hình, 1 thằng đi lên đầu tiên, vượt đỉnh => MÚC | 4-6 tháng
+      - Có sóng ngành đánh rất an toàn
+  - Buổi 3: Đi vốn
+    - CHẤP NHẬN NGAY KHOẢN LỖ |  | Quy tắc cắt lỗ: |  | 4% CẮT 1/2  | 8% CẮT HẾT |  | CẮT NHANH NHẤT CÓ THỂ VÀ ĐỪNG CÓ TIẾC
+      - Mỗi lần mua cổ phiếu đúng thường lãi 20% | Đánh ngắn thường 20% mới chốt.
+      - Nếu đúng 1 lần sai 2 lần vẫn OK. Phải cắt lỗ kỷ luật
+      - Kỷ luật mua đúng thì xác suất ăn là cao. Nếu mua sai thì việc đầu tiên nghĩ là cắt lỗ nhanh nhất có thể để lấy lại trạng thái săn mồi, gỡ lại.
+      - Nền đủ mua là 3-4 tuần
+      - Sau 20% thường đi ngang tạo nền
+      - Biết tại sau sai?
+      - Không được tiếc, hối hận.
+      - Cắt lỗ có 2 nỗi sợ.  | Sợ vì thừa nhận mình sai và sợ cắt xong hồi.
+      - Đa phần là không cắt được
+    - Đi vốn
+      - Còn tiền là còn tất cả
+      - Nếu sai ngay từ lần đầu tiên thì không có lý do nào gia tăng vốn
+      - Khoản lãi phía trước phải tài trợ cho các khoản lỗ phía sau
+      - Mỗi lần test đáy mà khối lượng cao thì phải test lại lần nữa. KL thấp hẳn thì mới lên được
+      - CP cũ đang lãi rồi mà ko có điểm mua đúng thì ko được gia tăng vào CP lãi đấy nữa. Không khác gì là điểm mua mới. Phải chọn điểm VCP vững chắc mua gia tăng đúng. MUA SAI ĐIỂM ĂN ĐÒN NGAY.
+      - Anh em mới all in 1 CP luôn là sai lầm
+      - Nếu có 500tr thì đi vốn thế nào? |  | Chia vốn thành 5 phần | Bắt đầu với 100 triệu, chọn 1-2 cổ phiếu | Mục tiêu: 100 triệu → 108-110 triệu | Nếu đạt mục tiêu, nâng vốn lên 200 triệu | Mục tiêu: 200 triệu → 216 triệu (lãi 8%) | Nếu đạt tiếp, nâng vốn lên 400 triệu để đánh tiếp | Nếu tình hình xấu, cắt lỗ để hoà vốn
+      - Cứ mỗi lần lãi 8%, tăng vốn x2 để tối đa hoá lợi nhuận. | Nếu thị trường xấu hoặc lỗ 8%, sẽ cắt lỗ để bảo toàn vốn.
+      - Nếu đang thua đừng gia tăng vốn và trung bình giá
+      - Đánh 10-20%, đúng có lãi nổ lên thì tăng 50%. Nếu đầu cơ mà nổ được thì bán đầu cơ đánh mã khác tỉ trọng 100%. Vì đúng thì ăn to còn ko thì hoà.
+      - Đánh ít thôi, bảo mua 10% mà cứ mua full
+    - Đi vốn 06/2025
+      - Đánh 10% cổ phiếu này, CP khác có điểm mua thì 10%
+      - Không gia tăng vốn tại con CP đang cầm khi chưa có điểm mua. TCH sai của tôi
+      - Mỗi lần vào là 20%.  | Mỗi vị thế thường là 10%, thường là 2 CP mỗi CP 10%. Ko nên vào thẳng 20% |  | Ví dụ có 100tr. đánh 4 cổ phiếu. Mỗi cổ phiếu 10%.
+      - Danh mục cổ phiếu: | - 2 dòng trở lên | - 4-5 mã cổ phiếu trở lên
+      - Không ALL-IN
+      - Đánh 10% trước, Ổn thì được phép gia tăng thêm mua con khác |  | Nếu phiêu thì đánh 2 con 10%
+      - Ví dụ:  | - Có 1 tỉ, đánh tầm 200tr. Có lãi xong đi vốn  lên 400-500tr. Nếu sai thì hoà.  | Chúng ta cần mua các điểm nổ khác nhau. Với điều kiện khoản lãi đó tài trợ cho các vị thế khác. | Đánh 4-5 cổ phiếu 20 20 20 với điều kiện CP lần đầu phải đúng.  | Lần đầu đánh 10, lần đầu đúng, lần sau đánh 20. Lần tiếp đánh 50 và 100 luôn. Và đi vốn rất nhanh, 2-3 ngày.  | Đi vốn 10 -> 20 -> 40  -> 100
+      - Mua gia tăng khi test lại MA20 và hướng lên - Cân bằng
+      - Mỗi lần 20%, mỗi lần mua là 10% cho 2 cổ.
+  - Buổi 4: Săn điểm nổ, bắt đáy, test đáy, cân bằng, nổ xong thế nào
+    - VCP mua nền 1,2 là tốt nhất  | Nền 1 thường 4-6 tháng | Nền 2 thường ngắn hơn | Nhưng cũng có thể bị fail luôn khi ở nền 1 và 2 | Mỗi nền thường tăng giá 20% | Bứt tốc thường 30-50% | 1 Cp thường 3-5 nền | Nền càng trên cao nó càng ngắn
+    - Nền là gì? Vùng VCP đi ngang, Test loanh quanh mẫu hình.
+    - Dòng/ngành không thể lead thị trường liên tiếp. Phải thay phiên TT mới lên được
+    - CP đang nằm trên MA200 hay dưới MA200? | Giá trên MA200 là có thể bước vào giai đoạn 2  | Giá dưới MA200 là có thể bước vào giai đoạn 4.  | Đường này chỉ để tham khảo | Đường MA200 hướng lên thì vào uptrend tốt hơn, chúc xuống thì rất khó ngóc đầu lên được
+    - VCP bị lỗi? Chưa thủng lần trước thì chờ lần vắt tiếp theo và bỏ qua lần vắt trước.  | Stay with the Count
+    - Quy tắc Test đáy
+      - Thường test lại đúng điểm giá đóng cửa của đáy trước, đôi khi nó thấp hay cao hơn 1 chút.  | Nếu phần đáy có KL thấp thì rất tốt.  | Nếu test lại mà KL cao hơn trước thì nó sẽ test đi test lại. Test đi test lại đến bao giờ KL thấp thì có thể ko thủng còn nếu cao thì khả năng thủng
+      - Nếu test đi test lại thì sẽ là nền cứng
+      - Test lại đáy trước không thủng với vol thấp và phiên hôm sau nó hướng lên thì nó cân bằng. Bắt buộc phải phiên hôm sau hướng lên
+      - Nếu nghe câu là chờ CP, Thị trường cân bằng tức là phải chờ CP test lại cho cân bằng
+    - Quy tắc bắt đáy
+      - Khi xuất hiện đáy kiểu gì nó cũng phải quay lại test cái đáy đó. Nếu test lại đáy KL cao =>  Thủng hoặc lên rồi test lại lần nữa.
+      - 1 CP tạo ra 3 đáy trở lên ko thủng thì bắt đáy ở điểm ở đáy thứ 3 ở T+
+    - Quy luật săn điểm nổ
+      - Kỹ thuật nhìn thanh Bar VSA
+        - Thanh Bar No Supply: Phiên giảm điểm với KL thấp.  | Trong quá trình họ gom giá họ kiểm tra xem họ đã đủ hàng hay chưa? Họ ép giá xuống xem có ai muốn bán hay ko, xem KL thấp hay ko?  | Nếu ép thấy KL cao => dân còn nhiều hàng, cần phải rung giũ nhiều  | Nếu ép thấy KL thấp, ít thăng bán => Nó sẽ Test cung
+        - Thanh Bar Test Cung: Lái sẽ rút lên luôn bằng một thanh bar xanh. KL cũng cần phải thấp như phiên trước.  | Tao tăng giá lên mà chả ai muốn bán nữa
+        - Khi 2 cặp bar này gần nhau (cạnh nhau) thì rất có khả năng phiên hôm sau nổ có cây Break. KL cũng rất cao | HAG 03/10/2023 | DGC 29/05/2023 | DGC 12/07/2023
+        - Nổ lên và KL lớn có quá nhiều nhỏ lẻ đu bám vào, và nó có thể phải giũ bỏ | Nó có sự phân phối ngay trong cây Break. | Chỉ cần KL gấp đôi so với các cây KL lớn nhất các phiên trước, x3 x4 thì phải thận trọng. Cũng k phải KL lớn nhất lịch sử
+        - Cách mua điểm nổ: Xem lúc 10 giờ, KL bắt đầu vào, tăng 2-3% thì rất có thể nổ.  | Mới 10h mà KL bằng 1/2 phiên trước rất có thể nổ. | Tốt nhất là lấy ở điểm đóng phiên Test cung.  | Không đu trần
+        - Canh lúc 2h, 2h15 thấy vol thấp, Thị trường vol thấp. Thì canh mua ở Test cung. Thử 10% trước.  | Mai nổ thì lấy thêm hoặc cuối phiên mua thêm ít
+        - Khi cổ phiếu nổ, xác suất 50% nổ và 50% quay lại kiểm tra. Hên xui! | Nổ vẫn mua bình thường, đừng có mua ở giá cao quá.  | Phiên nổ 1-2% khi cp bắt đầu tăng. | Không được mua cao, có cảm giác nổ thì mua lúc 2% |  | Nếu không mua được phiên này thì canh mua pullback. Lúc vòng về test. Mua ở lúc dưới đáy bóng Tennis nảy lên. KL tăng dần, giảm kl thấp. => Khó
+        - Nếu CP quay về test lại thành công, cân bằng mà ko giảm thì sẽ tăng rất mạnh. Bóng Tennis
+        - Vẫn phải dựa trên VCP
+        - Khi nổ lên nó sẽ giảm ở KL thấp, CP giảm 3 phiên liên tục, KL cao dần => Dấu hiệu xấu |  | Nếu như ảnh thì giảm KL thấp, mua KL cao thì tốt và vòng lên được.
+  - Buổi 5
+    - Squad nổ bù: | Sau khi nổ lên KL đạt mà kết phiên lại giảm về giữa cây nến. Thì 2 phiên sau phải đóng nên quanh quanh giá đóng cửa phiên squad. Thì phiên tiếp theo sẽ nổ bù. Nhưng sau khi nổ bù ko biết CP sẽ đi thế nào? | KDH 22/07/2021 | Giảm nhẹ hoặc rút chân lên thanh khoản thấp.
+    - Pocket Pivot: Khi thị trường khó | - Mua vượt qua đỉnh khi kháng cự yếu nhất của VCP | - Sử dụng MA10 và MA50, ko quan tâm là đường nào đứng trên đường nào đứng dưới | - Khi thấy 1 cấu trúc VCP sắp hình thành, thấy 1 thanh giá vượt qua MA10, Giá vượt qua cả MA10 và MA50, KL phải lớn hơn bất kỳ các phiên giảm điểm cao nhất nào tính từ 10 ngày trở về trước (chỉ tính phiên giảm điểm thôi nhé) | - Lấy vị thế 10-20% thôi nhé. rất an toàn. xogn gia tăng 20,40 tuỳ. Vượt Pivot thì vào full hết | HAG 23/10/2023 | HAG 01/07/2022 | FRT 30/5/2023. 10 20 40 full
+    - Kỹ thuật Phá Trend. KO quan tâm tới là đang down hay up trước nhé | Nối các đỉnh của CP vào, khi đường giá bứt khỏi cái kênh thì đừng vội mừng, chưa chắc uptrend. phải có nó móc xuống và nó móc lên thì mới mua. Như phải đợi mua ở D nối sang B | Vix 7/7/2023
+    - Thấy Pivot mua 10%, Cp bứt lên có đệm lãi điều kiện để gia tăng 20%. Vượt Pivot múc gia tăng 50%. 50% vẫn còn tiền thì tìm CP khác. Buổi 5 37p
+    - Càng mua kỹ bao nhiêu thì càng đỡ phải cắt lỗ.Nếu sàn phiên này mà phiên sau hồi lên phải cắt ngay.
+    - Mẫu hình | Không áp dụng mẫu hình vào VNINDEX | Không đoán mẫu hình | Chờ tạo đủ mẫu hình đúng thfi mới mua | Trước đó là xu hướng lên là rất tốt | QUAN TRỌNG NHẤT KL từ trái qua phải thấp dần để thể hiện khăn được vắt
+      - Vai đầu vai ngược.  | Kẻ 1 đường vòng sang bên trái. Vượt thì mua là Pivot | Nếu vai phải thấp hơn vai bên trái thì càng tốt. Thủng cả đáy trước mà bứt được thì tốt
+      - Vai đầu vai
+      - 2 đáy | Đáy sau phải thấp hơn phía trước | ĐỈnh giữa phải tù tội, phải đi ngang chứ ko thẳng đứng. Mục đích tạo nền ngang để có lừa NĐT nó tăng tiếp sau đó nó kẹp hàng.  | Điểm C loằng ngoằng kia phải nằm ở dưới vùng tạo đỉnh bên trái. Nếu vượt qua thì hỏng mẫu hình | Vượt điểm C là Pivot mua vào nhé | Đôi khi nó sẽ tạo tay cầm.  | Thời gian tích luỹ 2-3 tháng thì càng mạnh
+      - Cốc tay cầm | Khi gặp vùng đỉnh, gặp nguồn cung thì áp lực bắt đáy + bị kẹp tạo thành 1 lực áp xuống => tay cầm | ĐIểm mua vẫn là vùng vượt pivot kẻ ngang sang | Gần vùng đỉnh KL tăng nhưng sẽ siết lại lúc tay cầm  | Vượt PIVOT thì mua luôn | Cốc tay cầm mà tay cầm vống lên thì bỏ
+  - Bài 7: Cách bán cổ phiếu
+    - Nến shakeout: Đang từ dưới đi lên, gặp cây shakeout. Tưởng tăng mạnh mà CP bị bán mạnh trở lại. | Báo hiệu có đợt điều chỉnh nhẹ hoặc xu hướng bị thay đổi  | VOL cao CP sẽ bị trọng thương | Là 1 dạng của cây PP
+    - UP thurst | Đầu tiên giảm rất mạnh. -20 điểm phải rất chú ý. Hồi lại ròi lại giảm 40-50đ  | Thường xuất hiện sau shakeout  | Báo hiệu giảm mạnh | Xem lại Bài 7 11p | Mua lại rất nhanh, tốc độ giao dịch rất nhanh. | -5 TC -5 sàn
+    - Cách xác định đỉnh của 1 cổ phiếu
+      - Cổ phiếu nếu tích luỹ nền 4-6 tháng . Thường là X2. Giá target từ 18-36 là đỉnh. Lấy đường trung bình giá của sideway x2 là đỉnh
+      - Nền giá của nó: 3-5 nền. Nền càng cao, giao động lỏng thì càng gọi là tới đỉnh | Lỏng là giá biên độ lớn, liên tục trần sàn.
+      - Chạy nước rút | Cp sẽ chạy trần liên tục. Tạo sự hưng phấn
+      - Khối lượng:  | Cao xác xuất tạo đỉnh cao  | Vùng đỉnh nến tuần khối lượng rất cao
+    - Thị trường tạo đỉnh | Phải áp dụng tất cả các dấu hiệu  | Áp dụng với VNINDEX
+      - Dòng dẫn mà đạt đỉnh thì TT sẽ tạo đỉnh
+      - Tính chu kỳ | Thường 1 dòng dẫn chỉ dẫn tầm 2 quý - 6 tháng thôi | Kỳ báo cáo kqkd: Giữa tháng 9 và đầu tháng 4
+      - Khối lượng khi gom hàng luôn thấp | Khối lượng khi PP luôn cao. KL vùng đỉnh thường 2,5 lần so với KL vùng gom hàng.
+      - Nên nhìn nến tuần để ít nhiễu
+      - Phiên phấn phối: Là 1 phiên giảm điểm, KL cao hơn ngày hôm trước
+      - Khi thị trường ở đỉnh nó xảy ra chùm PP. 3-5 phiên liên tục trong vòng 2-3 tuần. 15 phiên.  | Khả năng sẽ tạo đỉnh.  | Nếu 3 phiên là cảnh giác.  | 5 phiên là chết | https://youtu.be/PiWW3RrM2qE?si=mJtSC3PFFLaRlgi6&t=4572
+      - Phiên gần như không tăng ko giảm. KL tăng vọt => Phiên PP
+      - Khi có cây PP đầu tiên thường thị trường sẽ vượt tiếp
+  - Quản trị rủi ro - Đi vốn
+    - Quản trị rủi ro
+      - Thay đổi tư duy | Chắc chắn bạn sẽ có những khoản lỗ. Đó là 1 phần trong trò chơi
+      - Thị trường khó khăn:  | - Giảm MG | - Giảm vị thế  | - Giao dịch ít lại  | - Cắt lỗ và chốt lãi: Bé lại
+      - Mục tiêu mỗi năm kiếm được 30%
+      - Không bao giờ "Chỉ 1 lần nữa thôi"
+    - Đi vốn
+      - Đi vốn
+      - Nếu có 2 tỉ | Mình đánh 25% => 500tr | Ngày 1 mua 4 cổ. Đặt ra số lượng, lời lỗ bao nhiêu | Ghi 1 dòng là phải kiếm bao nhiêu tiền để đủ cắt lỗ 4% cho 1 vị thế mới (1 tỉ)?  | 500tr kiếm được 40tr (lãi 8% thì mới đủ để đánh 1 tỉ)
+      - Chỉ đánh được tối đa đậm sâu là 50% của 1 CP
+      - Đoạn này là sau khi kiếm được 40tr tài trợ đánh 1 tỉ thì TÌM 2 CP KHÁC CHỨ KO PHẢI ĐÁNH LẠI 2 CP KIA. TĂNG TIỀN LÊN ĐỂ GIẢI NGÂN HẾT
+  - Mẫu hình
+    - Các mẫu hình | - Mẫu hình mà biến động mạnh: Nến to không ổn định, nhiều nhỏ lẻ -> Lỏng | - Mẫu hình mà biến động nhỏ, nền nã -> Chặt -> lái cầm nhiều | - Mẫu hình thời gian càng lâu, càng dài thì tăng càng mạnh, đặc biệt 4-6 tháng sẽ nhân đôi | CP đi ngang 5 phiên k lên được thì sẽ gãy và test lại.
+      - Cốc tay cầm
+        - Phần tay cầm phải thể hiện Vol thấp -> rung rũ kiệt
+      - 2 đáy
+        - Đỉnh C là tù tù chữ ko thẳng đứng | Đáy sau thấp hơn đáy trước |  | Thường là cuối nhịp giảm mạnh | Thường mua 50% ở đáy 2 và thường có nhịp test lại trên cao và điểm đấy là điểm gia tăng
+          - Có trường hợp tạo tay cầm thì mua ở điểm cắt qua ABC
+      - Wickoff
+        - Cổ phiếu đi ngang 4-6 thánghoặc hơn. Xong tự nhiên gãy xuống và phục hồi được => Mua điểm SOS
+      - Vai đầu vai ngược
+        - 1. Vai bên phải có thể thấp hơn vai bên trái, thường là bằng.  | (Vì thấp hơn là rõ bỏ được các NĐT kẹt bên trái luôn)
+        - 2. Mẫu hình thực tế sẽ nghiêng như này
+        - 3. Đôi khi vai phải đi ngang, không giũ
+        - 4. Hay xuất hiện khi thị trường giảm
+      - Gãy nền rũ bỏ |  | Thường về các nền hỗ trợ ngừng giảm. Lên 1 tí rồi lại test lại. Cân bằng được thì mua   |  | MWG: 2021
+      - Test lại đáy |  | - CP khi rơi và hồi lên. VND: 5/5/2025  | - Hồi lên và quay trở lại test đáy 1 lần nữa. hồi lên được gọi là cân bằng.
+      - Cân bằng:  | - Test đáy đến khi nào vol kiệt | - Khi cổ phiếu test xong và giữ được giá và hướng lên thì nó là cân bằng | - Điểm đáy là giá đóng cửa của phiên đáy đầu tiên |  | => Test đáy lại thành công hướng lên thì gọi là CB | - Test đáy 3 lần thì dám bắt |  | VHM 19/05/2025. Mua điểm 2 thanh hướng lên
+  - Kiến thức cơ bản
+    - Thế nào là nền giá?  |  | - Vùng đi ngang, kết phiên thẳng hàng với nhau, biên độ hẹp thì gọi nền giá chặt. Biên độ lỏng thì gọi là nền giá lỏng.  | - Nền giá vừa có thể là hỗ trợ/kháng cự | - Mỗi nền sẽ tăng 20%
+    - Hỗ trợ/Kháng cự: | - Nền giá | - Đỉnh trước | - Đáy trước | - Gáp trước
+    - 1 CP đang đi lên mà gặp kháng cự: Cần tích luỹ trước kháng cự đó. nếu mà lên luôn thì thường quay lại test đỉnh rồi cân bằng sau đó mới lên được
+    - Bùng nổ theo đà:  |  | Xác nhận thị trường vào sóng |  | Ngày tạo đáy đầu tiên gọi là phiên 1 |  | - Phiên thấp nhất xuống sâu hơn và rút chân lên > 1 nửa |  | Bùng đổ theo đà: Thường xuất hiện ngày 4-8. 1 số 11-12. Xuất hiện càng muộn thì sóng càng càng yếu, tỉ lệ thất bại cao |  |  |  | VNINDex tăng trên 1,5%. KL chỉ cần cao hơn ngày hôm trước. Nếu biên độ càng mạnh thì sóng càng to.  |  | => vào 30% vào các con tăng trần vào cách nhanh nhất.  |  | Bùng nổ sai ít nhất 2 tuần mới rơi. |  | Trường hợp phiên 3 mới nổ thì phiên 1 - 2 phải tăng rất mạnh |  | PP bùng nổ phải lan toả khắp các nhóm ngành, chỉ kéo trụ thì là fail |  | Thị trường rơi chưa đủ nhịp từ 3-5 nhịp => nếu xuất hiện bùng nổ cũng dễ fail
+    - Bám MA5 rất khoẻ
+    - 5 bước mua 1 CP
+      - 1. Nắm được vĩ mô kinh tế, chính trị, xã hội VN => suy ra nhóm ngành được hưởng lợi từ vĩ mô
+      - 2. Nhóm ngành hưởng lợi => Tổng hợp 3 ngành hưởng lợinhất
+      - 3. Cổ phiếu hưởng lợi nhất => Tìm ra 1 CP khoẻ nhất trong 1 ngành
+      - 4. Phân bổ vốn => Công thức phân bổ vốn
+      - 5. Quản trị rủi ro => Cách mua và bán 1 CP
+    - Cổ phiếu Mạnh - Yếu
+      - Mạnh
+        - Gần đỉnh (cách đỉnh khoảng 5-10-15%)
+        - Có KL bắt đáy lớn hơn phiên ở tuần trước
+        - TT điều chỉnh, nó điều chỉnh ít
+        - Có kết quả KD quý tốt
+      - Yếu
+        - Xa đỉnh từ 20% đổ lên
+        - KL bắt đáy thấp, thanh khoản bắt đáy thấp hơn TB 20 phiên
+        - Có kết quả KD quye không tốt
+      - Leader
+        - Vốn hoá ảnh hưởng tới chỉ số
+        - TT tạo đáy nó là con đầu tiên tăng và tạo đáy
+        - CP bật đầu tiên khi về hỗ trợ
+    - Cổ hồi sau khi rơi 15-20% (rơi sâu - NHÓM 2) |  | Sắp xếp theo thứ tự hồi khoẻ nhất
+      - Hồi lên sau đó test lại và không thủng đáy cũ => tạo đáy sau cao hơn đáy trước => RẤT KHOẺ
+      - Hồi lên sau đó test lại và đáy 2 = đáy 1 => KHOẺ vừa
+      - Hồi lên sau đó test lại đáy 2 thấp hơn đáy 1 => YẾU | Sẽ hồi lại sau cùng
+  - Sóng dòng: |  | - Tất cả cổ phiếu trong dòng đó đang tích luỹ (ngang, tạo mẫu hình...) | - 1 con cổ phiếu vượt đỉnh (cao nhất thời đại, nằm trong khung mẫu hình, dấu hiệu nổ)  | => báo hiệu sóng dòng
+  - Cổ phiếu tạo đỉnh - Thị trường tạo đỉnh | - Cổ phiếu tạo đỉnh: Quan tâm con nào là con dẫn sóng? Tạo đỉnh rồi rơi thì các con khác rủi ro?  |  |  | - Thị trường tạo đỉnh: Dòng nào là dòng dẫn sóng? |  | Dòng nào đi lên đầu tiên trong một thị trường đi ngang?
+    - Cổ phiếu tạo đỉnh: |  | - Cổ phiếu đã nhân đôi từ nền giá hay chưa? Tính giá trung bình rồi x2 |  | - Tạo bao nhiêu nền giá rồi? 3-5 nền giá? UPthurst hay Shakeout ở nền giá cao thì phải cẩn thận |  | - Mùa BCKQ KD: Tháng 12,1 T4, T67, T910 |  | - Chạy bứt tốc, sự hưng phấn, trần vài phiên (có thể tăng 50% trong vài tuần) |  | - Gap kiệt sức, CP càng lên cao có GAP
+    - Thị trường tạo đỉnh:  |  | - CỔ phiếu dẫn dắt của sóng dòng tạo đỉnh | - Mùa BCKQ | - Chạy nước rút hay chưa?  | - TT tạo GAP kiệt sức hay ko?  | - Tạo ra 3-5 phiên PP |  |  | Vnindex: 11/03/2022
+    - Phiên PP:  |  | - VNINDex giảm với KL cao hơn ngày hôm trước trong vòng 20 phiên | - Phiên ko tăng điểm, xanh nhẹ,KL cao hơn ngày hôm sau -> Phân phối dừng  | - Phiên PP t3 thì phải dừng mua và té |  | Vnindex: 04/2025
+  - Bán
+    - CP sau khi nổ đi lên từ từ, gặp 1 cây No Demand - DOJI KL thấp chững lại.  | CP tiếp tục đi lên nhưng lúc sau sẽ test lại cây No Demand => Có thể đi lên tiếp |  | => Cây này báo hiệu ko còn leo dốc mạnh được nữa
+    - Cây Shakeout: Báo hiệu ko có dấu hiệu khẳng đinh.  | Sắp tới sẽ có nhịp chỉnh hoặc vùng đỉnh | Ở vị thế cao nhất của CP, kéo lên cao nhất rồi bán ngược về , VOL cao  |  | HAH: 28/05/2025 | Gex 28/05/2025
+      - Cây sau đó là Upthurst, KL to, giảm mạnh thì phải chạy ngay
+    - Cơ cấu: | T+7 +10
+      - 1. Mua mà nó ko tăng, ko giảm cay quá
+      - Tỷ trọng chung ổn 50-50
+      - Danh mục >5 mã, hạ về 50/50
+        - Bán mỗi mã 1/2
+        - Chọn khoẻ yếu
+          - Cổ dễ bán: Loanh quanh hoà, lỗ nhẹ, xanh nhẹ
+          - Cổ yếu:  TT > MA50, CP <MA50 => rất yếu | Phòng trường hợp TT phá MA50, CP sàn luôn
+          - Cổ khoẻ:  | - Cơ cấu theo dạng bán dần, bán bớt.  | TT < MA20, CP > MA20  | - Giảm từ đỉnh gần nhất ít nhất
+    - Lệnh MP - DỨT KHOÁT
+      - Khi bứt thoát mẫu hình, có tín hiệu mua/bán | Điểm mua chênh 1-2 line ko sao cả. kể cả 2-3%.
+      - MP 3 lệnh, sáng 1 lệnh, trưa 1 lệnh, cuối phiên 1 lệnh
+      - Bán cũng thế, chia 1/3 ra bán
+      - Kê lệnh
+        - CP đi ngang trong vùng tích luỹ
+        - Mua trên đà giảm, đang trend tăng nhưng giảm ngắn hạn, về MA50, MA100. Đỉnh sau thấp hơn đỉnh trước, đáy sau thấp hơn đáy trước
+  - Ví dụ 2
+  - Ví dụ 3
+  - 1. Sóng tăng ngắn hạn |  | Điểm nối đỉnh, nối đáy |  | Đỉnh sau cao hơn đỉnh trước, đáy sau cao hơn đáy trước
+  - 2. Khái niêm biên rung lắc, chỉnh, sập VNI |  | - Rung lắc: VNI giảm 2-5%. CP 4-10% | - Điều chỉnh: VNI chỉnh 5-8%, CP 10-16% | - Sập (có đỉnh ngắn hạn): > 8-10%. - CP 16-40% | - Giảm >20% TT bước vào TT con gấu
+  - 3. Sự khác nhau hành động rung lắc | - Rung lắc: Chọn lọc CP mạnh, tập trung vào ngành dẫn dắt hiện tại | - Có vị thế tốt (lãi >20%): kệ theo dõi, kệ trend | - Mua mới: Cực kỳ tập trung vào nhóm dẫn để mở vị thế (có thể là đánh ngắn, có thể là dài (vừa vào sóng tăng) | - Mua đua: Quản trị vị thế (chủ động có quy tắc riêng)
+  - 4. Sự khác nhau, hành động (Điều chỉnh) | - Điều chỉnh: Chọn lọc CP mạnh, tập trung vào nhóm ngành dẫn | - Có vị thế tốt (20%): Theo dõi phản ứng tại mốc hỗ trợ (chặn lãi) | - Mua mới: Vẫn tập trung vào dòng dẫn.
+  - 5. Sự khác nhau, hành động (SẬP) | - Chờ FTD (bùng nổ chỉ số, KL, nhóm dẫn mới hoặc nhóm dẫn dắt) | - Sóng mới
+  - 6. Tỷ trọng |  | - Rung lắc: Full hàng - tuỳ chuyên nghiệp Margin tỷ trọng linh hoạt tuy nhiên full) | - Điều chỉnh: Full - Không margin (theo dõi dẫn dắt) | - Sập: <30-50% NAV | - Mất uptrend dài hạn(quá 20% từ đỉnh):  T+ nhịp hồi với 50% vốn.
+  - 7. Tín hiệu sớm | - Phiên phân phối: >3 phiên PP, gần nhau cẩn thận (xác nhận) | - Gãy MA20 | - Tối quan trọng: Nhóm lead gãy MA20 (giảm >10%) | - Timing sự kiện quan trọng
+  - 8. Phái sinh |  | - Chart 5p | - PS hay tạo đáy ở các tuần vol cao thì lại tạo đỉnh ở tuần vol nhỏ => vùng đáy lái đạp để gom quyết liệt, lên đỉnh ra hàng từ từ | - Vol cao chưa chắc là đỉnh, và vol thấp vẫn tạo đỉnh. Nếu có vài vol cao rải rác thì cần lưu ý, có thể hạ long đổi short.
+  - Tính chất TRENDING:
+  - Tính chất TRENDING: |  | Tăng mạnh – giảm mạnh – hồi nhanh – vượt đỉnh nhanh |  | Điểm mua: Dễ cao break out
+    - 1. Điểm mua sớm
+      - Pivot (nến trong nền): Lấy vị thế
+      - Break trendline giảm: Lấy vị thế
+      - Break nền: 3th, 6th, 12th, 1,5 năm: Lấy vị thế hoặc gia tăng
+    - 2. Điểm mua bù (ưu tiên những điểm pullback kéo ngược đường TB: MA10, MA20, MA50)
+      - Pullback MA10: Lấy vị thế
+      - Pullback MA20: Lấy vị thế
+      - Pullback MA50: Lấy vị thế
+    - 3. Cách lấy vị thế |  | Chia 2, 3 lần lấy vị thế
+    - 4. Cách gia tăng
+      - Gia tăng theo biên lợi nhuận (với điều kiện: Điểm mua vị thế phải là hợp lý ở (1) & (2))
+      - Biên lợi 5-7% gia tăng 1 lần, 10% gia tăng một lần nữa
+    - 5. Điểm bán
+      - Vị thế chuẩn (1), (2) (chưa gia tăng được): Lỗ 7-10%, stoploss
+      - Đã gia tăng vị thế (full cổ): -7% stoploss 1/2, -10% stoploss toàn bộ
+    - 6. Chặn lãi
+      - 20-30% chặn 1/3 lãi (với điều kiện vị thế gia tăng chuẩn)
+      - TH giảm gãy MA20 (giảm 10% từ đỉnh), chặn 1/3 tiếp theo (bắt buộc)
+      - 1/3 còn lại hold theo MA50, MA100
+  - Cây PP đầu tiên của 1 CP có xu hướng tốt sẽ là điểm mua

@@ -19,10 +19,14 @@ dependencies:
   go_router: ^14.6.2
 
   # Charts - Candlestick
-  candlesticks: ^2.1.0
 
-  # Local Storage (Watchlist)
-  shared_preferences: ^2.3.3
+  # Local Storage (Settings - Gemini API Key)
+  shared_preferences: ^2.5.4
+
+  # Firebase (Cloud sync cho Trade Logs, Market Levels, Watchlist)
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.2
+  cloud_firestore: ^5.6.6
 
   # HTTP client for FData API server
   http: ^1.6.0
@@ -33,6 +37,19 @@ dependencies:
 
   # Intl (formatting số, ngày)
   intl: ^0.20.2
+  k_chart_plus: ^1.0.3
+  webview_flutter: ^4.13.1
+
+  # Trading Journal & AI Coach
+  flutter_markdown: ^0.7.3
+
+  # File picker — dùng để import JSON bảng phân tích hàng ngày
+  file_picker: ^8.1.2
+
+  # In-app update checker
+  package_info_plus: ^8.0.0
+  path_provider: ^2.1.4
+  open_file: ^3.3.2
 
 dev_dependencies:
   flutter_test:
@@ -42,8 +59,17 @@ dev_dependencies:
   riverpod_generator: ^2.6.2
   custom_lint: ^0.7.5
   riverpod_lint: ^2.6.2
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/chart.html
+    - assets/tv.js
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/app_icon.png"
+  min_sdk_android: 21

@@ -1,9 +1,137 @@
 import 'dart:math';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../models/stock_quote.dart';
 
-/// Service cung cấp mock data cho Phase 1 (trước khi có MQTT)
+/// Service cung cấp mock data (dự phòng khi fdata_server không chạy)
 class MockDataService {
   static final _rng = Random();
+
+  /// Gọi TradingView Scanner API để lấy giá EOD siêu nhanh
+  static Future<StockQuote?> fetchEodQuote(String symbol) async {
+    try {
+      final symUP = symbol.toUpperCase().trim();
+      final rs = await http.post(
+        Uri.parse('https://scanner.tradingview.com/vietnam/scan'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "symbols": {"tickers": ["HOSE:$symUP", "HNX:$symUP", "UPCOM:$symUP"]},
+          "columns": ["close", "change", "change_abs", "high", "low", "open", "volume"]
+        })
+      );
+      if (rs.statusCode == 200) {
+        final body = jsonDecode(rs.body);
+        final list = body['data'] as List?;
+        if (list != null && list.isNotEmpty) {
+          final sData = list[0];
+          final exch = (sData['s'] as String).split(':').first;
+          final d = sData['d'] as List; // 0:close, 1:change, 2:chAbs, 3:high, 4:low, 5:open, 6:vol
+          
+          final close = (d[0] as num).toDouble();
+          final changePct = (d[1] as num).toDouble();
+          final changeAbs = (d[2] as num).toDouble();
+          final high = (d[3] as num).toDouble();
+          final low = (d[4] as num).toDouble();
+          final open = (d[5] as num).toDouble();
+          final vol = (d[6] as num).toInt();
+          
+          final ref = close - changeAbs;
+          double limit = 0.07;
+          if (exch == 'HNX') limit = 0.1;
+          if (exch == 'UPCOM') limit = 0.15;
+
+          return StockQuote(
+            symbol: symUP,
+            exchange: exch,
+            reference: double.parse(ref.toStringAsFixed(1)),
+            ceiling: double.parse((ref * (1 + limit)).toStringAsFixed(1)),
+            floor: double.parse((ref * (1 - limit)).toStringAsFixed(1)),
+            open: open, high: high, low: low, price: close,
+            change: changeAbs, changePercent: changePct,
+            volume: vol,
+            totalValue: (close * vol / 1000).round(),
+            buy1: double.parse((close - 0.1).clamp(0, 9999).toStringAsFixed(1)), buyVol1: 0, 
+            buy2: double.parse((close - 0.2).clamp(0, 9999).toStringAsFixed(1)), buyVol2: 0, 
+            buy3: double.parse((close - 0.3).clamp(0, 9999).toStringAsFixed(1)), buyVol3: 0,
+            sell1: double.parse((close + 0.1).clamp(0, 9999).toStringAsFixed(1)), sellVol1: 0, 
+            sell2: double.parse((close + 0.2).clamp(0, 9999).toStringAsFixed(1)), sellVol2: 0, 
+            sell3: double.parse((close + 0.3).clamp(0, 9999).toStringAsFixed(1)), sellVol3: 0,
+            updatedAt: DateTime.now(),
+          );
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  /// Gọi TradingView Scanner API lấy D/S mã cùng lúc (Batch request)
+  static Future<List<StockQuote>> fetchEodQuotes(List<String> symbols) async {
+    try {
+      if (symbols.isEmpty) return [];
+
+      final tickers = <String>[];
+      for (final sym in symbols) {
+        final symUP = sym.toUpperCase().trim();
+        tickers.addAll(["HOSE:$symUP", "HNX:$symUP", "UPCOM:$symUP"]);
+      }
+
+      final rs = await http.post(
+        Uri.parse('https://scanner.tradingview.com/vietnam/scan'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "symbols": {"tickers": tickers},
+          "columns": ["close", "change", "change_abs", "high", "low", "open", "volume"]
+        })
+      );
+
+      final results = <StockQuote>[];
+      if (rs.statusCode == 200) {
+        final body = jsonDecode(rs.body);
+        final list = body['data'] as List?;
+        if (list != null && list.isNotEmpty) {
+          for (final sData in list) {
+            final exch = (sData['s'] as String).split(':').first;
+            final symbol = (sData['s'] as String).split(':').last;
+            final d = sData['d'] as List; 
+            
+            final close = (d[0] as num).toDouble();
+            final changePct = (d[1] as num).toDouble();
+            final changeAbs = (d[2] as num).toDouble();
+            final high = (d[3] as num).toDouble();
+            final low = (d[4] as num).toDouble();
+            final open = (d[5] as num).toDouble();
+            final vol = (d[6] as num).toInt();
+            
+            final ref = close - changeAbs;
+            double limit = 0.07;
+            if (exch == 'HNX') limit = 0.1;
+            if (exch == 'UPCOM') limit = 0.15;
+
+            results.add(StockQuote(
+              symbol: symbol,
+              exchange: exch,
+              reference: double.parse(ref.toStringAsFixed(1)),
+              ceiling: double.parse((ref * (1 + limit)).toStringAsFixed(1)),
+              floor: double.parse((ref * (1 - limit)).toStringAsFixed(1)),
+              open: open, high: high, low: low, price: close,
+              change: changeAbs, changePercent: changePct,
+              volume: vol,
+              totalValue: (close * vol / 1000).round(),
+              buy1: double.parse((close - 0.1).clamp(0, 9999).toStringAsFixed(1)), buyVol1: 0, 
+              buy2: double.parse((close - 0.2).clamp(0, 9999).toStringAsFixed(1)), buyVol2: 0, 
+              buy3: double.parse((close - 0.3).clamp(0, 9999).toStringAsFixed(1)), buyVol3: 0,
+              sell1: double.parse((close + 0.1).clamp(0, 9999).toStringAsFixed(1)), sellVol1: 0, 
+              sell2: double.parse((close + 0.2).clamp(0, 9999).toStringAsFixed(1)), sellVol2: 0, 
+              sell3: double.parse((close + 0.3).clamp(0, 9999).toStringAsFixed(1)), sellVol3: 0,
+              updatedAt: DateTime.now(),
+            ));
+          }
+        }
+      }
+      return results;
+    } catch (_) {}
+    return [];
+  }
 
   static List<StockQuote> generatePriceBoard() {
     final stocks = [

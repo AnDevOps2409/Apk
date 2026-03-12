@@ -1,7 +1,7 @@
 /// Nguồn dữ liệu cho app
 enum DataSourceMode {
   fdata,    // Đọc file .dat từ FData/AmiBroker qua Python API
-  realtime, // MQTT realtime (Phase 2) hoặc mock (Phase 1)
+  realtime, // DNSE WebSocket SDK (fdata_server.py)
 }
 
 extension DataSourceModeExt on DataSourceMode {
@@ -17,7 +17,7 @@ extension DataSourceModeExt on DataSourceMode {
       case DataSourceMode.fdata:
         return 'Đọc từ D:\\Ami\\AmiBroker qua Python server';
       case DataSourceMode.realtime:
-        return 'Dữ liệu thời gian thực (Mock / MQTT)';
+        return 'Dữ liệu thời gian thực (DNSE WebSocket)';
     }
   }
 }

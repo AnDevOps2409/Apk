@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>DNSE Chart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: #131722;
+            color: #d1d4dc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden
+        }
+
+        /* ── Toolbar ── */
+        #toolbar {
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            background: #1e222d;
+            gap: 4px;
+            height: 36px;
+            flex-shrink: 0
+        }
+
+        #symbol-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #d1d4dc;
+            min-width: 36px
+        }
+
+        #price-label {
+            font-size: 12px;
+            font-weight: 700;
+            font-family: monospace;
+            color: #d1d4dc
+        }
+
+        #change-label {
+            font-size: 10px;
+            font-family: monospace;
+            padding: 1px 5px;
+            border-radius: 3px;
+            background: #26a69a22;
+            color: #26a69a
+        }
+
+        .tf-btn {
+            padding: 2px 7px;
+            background: #2a2e39;
+            border: 1px solid #363c4e;
+            border-radius: 4px;
+            color: #848e9c;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all .15s
+        }
+
+        .tf-btn.active {
+            background: #2962ff;
+            border-color: #2962ff;
+            color: #fff
+        }
+
+        #status {
+            margin-left: auto;
+            font-size: 9px;
+            color: #4a5568
+        }
+
+        /* ── Chart area ── */
+        #chart-wrap {
+            flex: 1;
+            position: relative;
+            overflow: hidden
+        }
+
+        #chart-container {
+            width: 100%;
+            height: 100%
+        }
+
+        /* ── Bid/Ask panel ── */
+        #ob-panel {
+            display: none;
+            flex-direction: row;
+            background: #1a1d2e;
+            border-top: 1px solid #2a2e39;
+            flex-shrink: 0;
+            height: 72px
+        }
+
+        #ob-panel.visible {
+            display: flex
+        }
+
+        .ob-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4px 8px;
+            gap: 2px
+        }
+
+        .ob-bid {
+            border-right: 1px solid #2a2e39
+        }
+
+        .ob-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .ob-price-bid {
+            color: #26a69a;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: monospace
+        }
+
+        .ob-price-ask {
+            color: #ef5350;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: monospace
+        }
+
+        .ob-qty {
+            color: #848e9c;
+            font-size: 10px;
+            font-family: monospace
+        }
+
+        .ob-header {
+            font-size: 9px;
+            color: #4a5568;
+            margin-bottom: 2px;
+            text-transform: uppercase
+        }
+
+        #ob-toggle {
+            padding: 2px 7px;
+            background: #2a2e39;
+            border: 1px solid #363c4e;
+            border-radius: 4px;
+            color: #848e9c;
+            font-size: 10px;
+            cursor: pointer
+        }
+
+        #ob-toggle.on {
+            background: #2962ff22;
+            border-color: #2962ff55;
+            color: #2962ff
+        }
+
+        /* ── Loading / Error ── */
+        #loading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #131722;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+            color: #848e9c;
+            z-index: 999
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #2a2e39;
+            border-top-color: #2962ff;
+            border-radius: 50%;
+            animation: spin .8s linear infinite
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        #error-msg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            align-items: center;
+            justify-content: center;
+            background: #131722;
+            color: #ef5350;
+            font-size: 13px;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 998;
+            text-align: center;
+            padding: 20px
+        }
+
+        #error-msg button {
+            padding: 6px 16px;
+            background: #2962ff;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer
+        }
+    </style>
+</head>
+
+<body style="display:flex;flex-direction:column;height:100%">
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <span id="loading-text">Đang tải...</span>
+    </div>
+    <div id="error-msg">
+        <span id="error-text">Không kết nối được server</span>
+        <button onclick="retryLoad()">Thử lại</button>
+    </div>
+
+    <!-- Toolbar -->
+    <div id="toolbar">
+        <span id="symbol-label">--</span>
+        <span id="price-label" style="margin-left:6px"></span>
+        <span id="change-label" style="margin-left:4px"></span>
+        <div style="flex:1"></div>
+        <button class="tf-btn" data-tf="1D" onclick="changeTf('1D')">D</button>
+        <button class="tf-btn" data-tf="1H" onclick="changeTf('1H')">1H</button>
+        <button class="tf-btn active" data-tf="15m" onclick="changeTf('15m')">15m</button>
+        <button class="tf-btn" data-tf="5m" onclick="changeTf('5m')">5m</button>
+        <button class="tf-btn" data-tf="1m" onclick="changeTf('1m')">1m</button>
+        <button id="ob-toggle" onclick="toggleOB()" style="margin-left:4px">B/A</button>
+        <span id="status" style="margin-left:6px"></span>
+    </div>
+
+    <!-- Chart -->
+    <div id="chart-wrap">
+        <div id="chart-container"></div>
+    </div>
+
+    <!-- Bid/Ask Panel -->
+    <div id="ob-panel">
+        <div class="ob-side ob-bid">
+            <div class="ob-header">MUA (BID)</div>
+            <div id="bid-rows"></div>
+        </div>
+        <div class="ob-side">
+            <div class="ob-header">BÁN (ASK)</div>
+            <div id="ask-rows"></div>
+        </div>
+    </div>
+
+    <!-- Lightweight Charts v4 -->
+    <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+
+    <script>
+        // ── State ──────────────────────────────────────────────────────────────────
+        var SERVER_URL = '';
+        var currentSymbol = '';
+        var currentTf = '15m';
+        var showOB = false;
+        var refreshTimer = null;
+        var obTimer = null;
+        var chart = null;
+        var candleSeries = null;
+        var volumeSeries = null;
+
+        // ── Flutter Bridge ─────────────────────────────────────────────────────────
+        function notifyFlutter(msg) {
+            try { if (window.FlutterBridge) window.FlutterBridge.postMessage(String(msg)); } catch (e) { }
+        }
+
+        // Called by Flutter: setConfig('http://192.168.x.x:8765', 'VCB', '15m')
+        function setConfig(serverUrl, symbol, tf) {
+            SERVER_URL = serverUrl;
+            if (tf) currentTf = tf;
+            initChart();
+            loadSymbol(symbol);
+        }
+
+        // ── Chart Init ─────────────────────────────────────────────────────────────
+        function initChart() {
+            if (chart) return;
+            var wrap = document.getElementById('chart-wrap');
+            chart = LightweightCharts.createChart(wrap, {
+                width: wrap.clientWidth,
+                height: wrap.clientHeight,
+                layout: { background: { color: '#131722' }, textColor: '#848e9c' },
+                grid: { vertLines: { color: '#1e222d' }, horzLines: { color: '#1e222d' } },
+                crosshair: {
+                    mode: LightweightCharts.CrosshairMode.Normal,
+                    vertLine: { color: '#758696', width: 1, style: 1, labelBackgroundColor: '#2962ff' },
+                    horzLine: { color: '#758696', width: 1, style: 1, labelBackgroundColor: '#2962ff' },
+                },
+                rightPriceScale: { borderColor: '#2a2e39', scaleMargins: { top: 0.08, bottom: 0.30 } },
+                timeScale: {
+                    borderColor: '#2a2e39', timeVisible: true, secondsVisible: false,
+                    tickMarkFormatter: function (t) {
+                        var d = new Date(t * 1000);
+                        if (currentTf === '1D') return (d.getMonth() + 1) + '/' + d.getDate();
+                        return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+                    }
+                },
+            });
+
+            candleSeries = chart.addCandlestickSeries({
+                upColor: '#26a69a', downColor: '#ef5350',
+                borderUpColor: '#26a69a', borderDownColor: '#ef5350',
+                wickUpColor: '#26a69a', wickDownColor: '#ef5350',
+            });
+
+            volumeSeries = chart.addHistogramSeries({
+                priceFormat: { type: 'volume' }, priceScaleId: 'vol',
+            });
+            chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.78, bottom: 0 } });
+
+            window.addEventListener('resize', function () {
+                chart.applyOptions({ width: wrap.clientWidth, height: wrap.clientHeight });
+            });
+        }
+
+        // ── Symbol load ────────────────────────────────────────────────────────────
+        function loadSymbol(symbol) {
+            if (!symbol) return;
+            currentSymbol = symbol.toUpperCase();
+            document.getElementById('symbol-label').textContent = currentSymbol;
+            document.getElementById('loading-text').textContent = 'Đang tải ' + currentSymbol + '...';
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('error-msg').style.display = 'none';
+            clearInterval(refreshTimer);
+            clearInterval(obTimer);
+            fetchCandles(true);
+            if (showOB) fetchOrderbook();
+        }
+
+        // ── Fetch candles ─────────────────────────────────────────────────────────
+        function tfToLimit(tf) { return { 1D: 300, 1H: 200, '15m': 300, '5m': 300, '1m': 200 }[tf] || 300; }
+        function tfToRefresh(tf) { return { 1D: 60, 1H: 30, '15m': 15, '5m': 8, '1m': 3 }[tf] || 15; }   // seconds
+
+        function fetchCandles(fullLoad) {
+            if (!SERVER_URL || !currentSymbol) return;
+            var url = SERVER_URL + '/api/candles/' + currentSymbol
+                + '?timeframe=' + currentTf + '&limit=' + tfToLimit(currentTf);
+            fetch(url)
+                .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function (body) {
+                    var raw = body.candles || [];
+                    if (!raw.length) { showError('Không có data cho ' + currentSymbol); return; }
+
+                    var cData = [], vData = [];
+                    raw.forEach(function (c) {
+                        var d = c.date, t = c.time || 0;
+                        var y = Math.floor(d / 10000), mo = (Math.floor(d % 10000 / 100)) - 1, dy = d % 100;
+                        var hh = Math.floor(t / 10000), mm = Math.floor((t % 10000) / 100);
+                        var epoch;
+                        if (currentTf === '1D') {
+                            epoch = Math.floor(Date.UTC(y, mo, dy) / 1000);
+                        } else {
+                            // ICT = UTC+7 → subtract 7h for UTC epoch
+                            epoch = Math.floor(Date.UTC(y, mo, dy, hh, mm, 0) / 1000) - 7 * 3600;
+                        }
+                        cData.push({ time: epoch, open: c.open, high: c.high, low: c.low, close: c.close });
+                        vData.push({ time: epoch, value: c.volume, color: c.close >= c.open ? '#26a69a50' : '#ef535050' });
+                    });
+                    cData.sort(function (a, b) { return a.time - b.time; });
+                    vData.sort(function (a, b) { return a.time - b.time; });
+
+                    if (fullLoad) {
+                        candleSeries.setData(cData);
+                        volumeSeries.setData(vData);
+                        chart.timeScale().fitContent();
+                        document.getElementById('loading').style.display = 'none';
+                        startRefresh();
+                    } else {
+                        // Update bar cuối (live)
+                        candleSeries.update(cData[cData.length - 1]);
+                        volumeSeries.update(vData[vData.length - 1]);
+                    }
+
+                    // Update price header
+                    var last = cData[cData.length - 1];
+                    updatePriceHeader(last.close, raw[raw.length - 1]);
+
+                    var now = new Date();
+                    document.getElementById('status').textContent =
+                        ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2) + ':' + ('0' + now.getSeconds()).slice(-2);
+                    notifyFlutter('DATA_LOADED:' + currentSymbol + ':' + raw.length);
+                })
+                .catch(function (e) {
+                    if (fullLoad) showError('Lỗi kết nối\n' + e.message);
+                });
+        }
+
+        function updatePriceHeader(close, raw) {
+            var pLabel = document.getElementById('price-label');
+            var cLabel = document.getElementById('change-label');
+            if (!close) return;
+            pLabel.textContent = (close / 1000).toFixed(1) + 'k';
+            // Nếu server trả về source, có thể tính % change từ open
+            var pct = raw && raw.source ? '' : '';
+            cLabel.textContent = pct;
+        }
+
+        function startRefresh() {
+            clearInterval(refreshTimer);
+            var sec = tfToRefresh(currentTf);
+            refreshTimer = setInterval(function () { fetchCandles(false); }, sec * 1000);
+            // Bid/Ask refresh mỗi 3s nếu đang hiện
+            if (showOB) {
+                clearInterval(obTimer);
+                obTimer = setInterval(fetchOrderbook, 3000);
+            }
+        }
+
+        // ── Bid/Ask Orderbook ──────────────────────────────────────────────────────
+        function toggleOB() {
+            showOB = !showOB;
+            var panel = document.getElementById('ob-panel');
+            var toggle = document.getElementById('ob-toggle');
+            var wrap = document.getElementById('chart-wrap');
+            if (showOB) {
+                panel.classList.add('visible');
+                toggle.classList.add('on');
+                clearInterval(obTimer);
+                obTimer = setInterval(fetchOrderbook, 3000);
+                fetchOrderbook();
+            } else {
+                panel.classList.remove('visible');
+                toggle.classList.remove('on');
+                clearInterval(obTimer);
+            }
+            // Resize chart
+            setTimeout(function () {
+                if (chart) chart.applyOptions({ width: wrap.clientWidth, height: wrap.clientHeight });
+            }, 50);
+        }
+
+        function fetchOrderbook() {
+            if (!SERVER_URL || !currentSymbol) return;
+            fetch(SERVER_URL + '/api/orderbook/' + currentSymbol)
+                .then(function (r) { return r.json(); })
+                .then(renderOB)
+                .catch(function () { });
+        }
+
+        function renderOB(data) {
+            function fmt(p) { return p ? (p / 1000).toFixed(2) + 'k' : '--'; }
+            function fmtQ(q) { return q ? (q / 1000).toFixed(0) + 'K' : '--'; }
+
+            var bid = data.bid || [];
+            var ask = data.ask || [];
+
+            var bidHtml = '';
+            // Bid: hiển thị mức 1 (tốt nhất) ở trên, mức 3 ở dưới
+            for (var i = 0; i < 3; i++) {
+                var b = bid[i];
+                bidHtml += '<div class="ob-row">'
+                    + '<span class="ob-price-bid">' + (b ? fmt(b.price) : '--') + '</span>'
+                    + '<span class="ob-qty">' + (b ? fmtQ(b.qty) : '') + '</span>'
+                    + '</div>';
+            }
+
+            var askHtml = '';
+            for (var j = 0; j < 3; j++) {
+                var a = ask[j];
+                askHtml += '<div class="ob-row">'
+                    + '<span class="ob-price-ask">' + (a ? fmt(a.price) : '--') + '</span>'
+                    + '<span class="ob-qty">' + (a ? fmtQ(a.qty) : '') + '</span>'
+                    + '</div>';
+            }
+
+            document.getElementById('bid-rows').innerHTML = bidHtml;
+            document.getElementById('ask-rows').innerHTML = askHtml;
+        }
+
+        // ── TF switch ──────────────────────────────────────────────────────────────
+        function changeTf(tf) {
+            currentTf = tf;
+            document.querySelectorAll('.tf-btn').forEach(function (b) {
+                b.classList.toggle('active', b.dataset.tf === tf);
+            });
+            fetchCandles(true);
+        }
+
+        function retryLoad() {
+            document.getElementById('error-msg').style.display = 'none';
+            fetchCandles(true);
+        }
+
+        function showError(msg) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-text').textContent = msg;
+            document.getElementById('error-msg').style.display = 'flex';
+            notifyFlutter('CHART_ERROR:' + msg);
+        }
+
+        // ── Boot ───────────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function () {
+            notifyFlutter('DOM_READY');
+        });
+    </script>
+</body>
+
+</html>

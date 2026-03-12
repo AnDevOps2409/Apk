@@ -1,53 +1,115 @@
 {
-    "updated_at": "2026-03-06T22:47:00Z",
+    "updated_at": "2026-03-12T01:21:53+07:00",
     "working_on": {
-        "feature": "Environment Setup",
-        "task": "Khởi tạo Flutter Project",
-        "status": "pending_flutter_path",
-        "files": [],
-        "blockers": [
-            "Terminal chưa nhận lệnh 'flutter' do biến môi trường chưa được reload."
+        "feature": "Journal Screen Redesign + Navigation Simplification",
+        "status": "completed",
+        "files": [
+            "lib/features/journal/journal_screen.dart",
+            "lib/features/shell/app_shell.dart",
+            "lib/core/router/app_router.dart",
+            "lib/features/settings/settings_screen.dart"
         ],
-        "notes": "User đã cài đặt xong Flutter 3.41.4. Bước tiếp theo là tạo project tại D:\\ChungKhoan\\dnse_stock_app."
+        "blockers": [],
+        "notes": "Tất cả hot reload thành công. App đang chạy debug trên CPH2769."
     },
     "pending_tasks": [
         {
-            "task": "Chạy lệnh flutter create D:\\ChungKhoan\\dnse_stock_app",
+            "task": "Test journal screen trên device vào giờ giao dịch",
             "priority": "high",
-            "notes": "Cần sử dụng đường dẫn tuyệt đối tới file flutter.bat nếu terminal vẫn chưa nhận lệnh."
+            "notes": "Cần verify unrealized PnL realtime từ fdata_server khi market mở"
         },
         {
-            "task": "Tạo cấu trúc thư mục lib/ màn hình Bảng giá",
-            "priority": "medium",
-            "notes": ""
+            "task": "Xem xét mở rộng watchlist fdata_server ngoài VN30",
+            "priority": "low",
+            "notes": "User hỏi nhưng chưa có giải pháp tốt. Hiện tại VN30 + EXTRA_SYMBOLS trong .env"
         }
     ],
     "recent_changes": [
         {
-            "timestamp": "2026-03-06T21:20:00Z",
-            "type": "planning",
-            "description": "Lên kiến trúc và Implementation Plan cho Phase 1",
+            "timestamp": "2026-03-12T00:30:00+07:00",
+            "type": "ui_redesign",
+            "description": "Redesign _TradeTile trong journal_screen.dart: left color stripe, status chip ĐANG GIỮ/ĐÃ CHỐT, giá vào→ra với arrow, HT/MT inline chips, unrealized PnL badge",
             "files": [
-                "implementation_plan.md",
-                "task.md"
+                "lib/features/journal/journal_screen.dart"
+            ]
+        },
+        {
+            "timestamp": "2026-03-12T00:40:00+07:00",
+            "type": "navigation",
+            "description": "Bỏ tab Thị trường và Bảng giá khỏi bottom nav. Còn 3 tabs: Nhật ký (default) → AI Coach → Cài đặt. initialLocation = /journal",
+            "files": [
+                "lib/features/shell/app_shell.dart",
+                "lib/core/router/app_router.dart"
+            ]
+        },
+        {
+            "timestamp": "2026-03-12T00:50:00+07:00",
+            "type": "bugfix",
+            "description": "Fix encoding: PowerShell Set-Content thêm BOM vào file Dart → tiếng Việt bị lỗi. Rewrite journal_screen.dart bằng write_to_file tool (UTF-8 no BOM)",
+            "files": [
+                "lib/features/journal/journal_screen.dart"
+            ]
+        },
+        {
+            "timestamp": "2026-03-12T00:55:00+07:00",
+            "type": "bugfix",
+            "description": "Fix font: RichText/TextSpan không kế thừa font family từ ThemeData. Đổi sang Row+Text cho _buildLevelChip trong HT/MT chips",
+            "files": [
+                "lib/features/journal/journal_screen.dart"
+            ]
+        },
+        {
+            "timestamp": "2026-03-12T01:05:00+07:00",
+            "type": "investigation",
+            "description": "Verify fdata_server hoạt động đúng: ws_status connected=true, 31 mã subscribe, cached_quotes đủ. EOD data VCB close=60.4. Giá last trống ngoài giờ giao dịch là bình thường.",
+            "files": [
+                "D:/ChungKhoan/fdata_server.py"
+            ]
+        },
+        {
+            "timestamp": "2026-03-12T01:20:00+07:00",
+            "type": "navigation",
+            "description": "Bỏ tab Bảng giá. Còn 3 tabs: Nhật ký | AI Coach | Cài đặt",
+            "files": [
+                "lib/features/shell/app_shell.dart"
             ]
         }
     ],
     "errors_encountered": [
         {
-            "error": "flutter: command not found",
-            "solution": "Khởi động lại Terminal/IDE hoặc sử dụng đường dẫn tuyệt đối đến file flutter.bat/Thêm Path vào Environment Variables",
-            "resolved": false
+            "error": "RichText TextSpan không hiển thị đúng font",
+            "solution": "Dùng Row + Text thay vì RichText để kế thừa ThemeData font family",
+            "resolved": true
+        },
+        {
+            "error": "PowerShell Set-Content -Encoding UTF8 ghi BOM vào file Dart → tiếng Việt bị lỗi trên device",
+            "solution": "Dùng write_to_file tool của Antigravity hoặc [System.IO.File]::WriteAllText với new UTF8Encoding($false)",
+            "resolved": true
+        },
+        {
+            "error": "fdata_server endpoint /quotes → 404",
+            "solution": "Endpoint đúng là /api/quotes, /api/candles/{SYM}, /api/ws_status",
+            "resolved": true
         }
     ],
     "decisions_made": [
         {
-            "decision": "Sử dụng Flutter cho App Android",
-            "reason": "Đa nền tảng, hiệu năng cao phù hợp real-time UI, thư viện chart phong phú"
+            "decision": "App tập trung vào Nhật ký giao dịch là CORE",
+            "reason": "User muốn app tập trung chính về nhật ký và chiến lược, bỏ các tab market overview, bảng giá, danh mục"
         },
         {
-            "decision": "Split view: thiết kế dạng trên/dưới",
-            "reason": "Phù hợp với màn hình dọc của điện thoại"
+            "decision": "Không dùng PowerShell để edit Dart file",
+            "reason": "PowerShell Set-Content thêm BOM gây lỗi encoding font chữ tiếng Việt"
+        },
+        {
+            "decision": "fdata_server giữ VN30 + EXTRA_SYMBOLS, không fetch all stocks",
+            "reason": "Subscribe thousands of symbols qua WebSocket quá nặng tài nguyên"
         }
-    ]
+    ],
+    "run_commands": {
+        "debug_device": "flutter run -d 3B65C4016KD00000",
+        "hot_reload": "Gõ 'r' trong terminal flutter run",
+        "server": "python D:\\ChungKhoan\\fdata_server.py",
+        "analyze": "flutter analyze lib/features/journal/journal_screen.dart"
+    }
 }

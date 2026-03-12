@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/providers/stock_providers.dart';
+import '../../core/models/stock_quote.dart';
 
 class WatchlistScreen extends ConsumerWidget {
   const WatchlistScreen({super.key});
@@ -10,7 +11,7 @@ class WatchlistScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final watchlist = ref.watch(watchlistProvider);
-    final boardAsync = ref.watch(priceBoardProvider);
+    final watchlistQuotesAsync = ref.watch(watchlistQuotesProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -23,11 +24,25 @@ class WatchlistScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: boardAsync.when(
+      body: watchlistQuotesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator(color: AppColors.accent)),
         error: (e, _) => Center(child: Text('Lỗi: $e')),
-        data: (allQuotes) {
-          final watched = allQuotes.where((q) => watchlist.contains(q.symbol)).toList();
+        data: (quotes) {
+          // Trả về danh sách chứng khoán đã được sắp xếp theo đúng thứ tự của watchlist (nếu cần)
+          // TradingView API có thể trả về không đúng thứ tự, nên map lại:
+          final watched = watchlist.map((sym) {
+            final matches = quotes.where((q) => q.symbol == sym).toList();
+            if (matches.isNotEmpty) return matches.first;
+            // Fallback trong trường hợp API lỗi cho mã cụ thể
+            return StockQuote(
+              symbol: sym, exchange: 'HOSE', reference: 0, ceiling: 0, floor: 0,
+              open: 0, high: 0, low: 0, price: 0, change: 0, changePercent: 0,
+              volume: 0, totalValue: 0,
+              buy1: 0, buyVol1: 0, buy2: 0, buyVol2: 0, buy3: 0, buyVol3: 0,
+              sell1: 0, sellVol1: 0, sell2: 0, sellVol2: 0, sell3: 0, sellVol3: 0,
+              updatedAt: DateTime.now(),
+            );
+          }).toList();
 
           if (watched.isEmpty) {
             return _EmptyWatchlist(onAdd: () => _showAddDialog(context, ref));

@@ -1,50 +1,223 @@
 {
     "meta": {
         "schema_version": "1.1.0",
-        "awf_version": "3.3.0"
+        "awf_version": "4.0.2"
     },
     "project": {
-        "name": "dnse_stock_app",
-        "type": "Android Flutter App",
-        "status": "planning_and_setup"
+        "name": "Magic Stock App",
+        "type": "Flutter Mobile App (Android)",
+        "status": "Phase 12 — Journal Redesign + Navigation Simplification"
     },
     "tech_stack": {
         "frontend": {
             "framework": "Flutter",
-            "language": "Dart",
             "state_management": "Riverpod",
-            "charts": "candlesticks / syncfusion",
-            "websocket": "web_socket_channel"
+            "routing": "GoRouter",
+            "charting": "WebViewController loading TradingView LightWeight Charts via assets/chart.html",
+            "markdown_render": "flutter_markdown ^0.7.3 (dùng cho AI Review response)"
         },
         "backend": {
-            "api": "DNSE OpenAPI SDK"
+            "fdata_server": "fdata_server.py chạy local port 8765 — DNSE WebSocket SDK realtime + REST EOD. VN30 + EXTRA_SYMBOLS",
+            "ai_api": "Gemini Flash API (google generativelanguage.googleapis.com) — AI Review giao dịch",
+            "cloud": "Firebase Firestore (cloud_firestore ^5.6.12) + Anonymous Auth",
+            "market_data": "DNSE OpenAPI: WS realtime OHLC/trade/quote, REST historical OHLC. FDataService (fdata_service.dart) kết nối qua serverIpProvider"
         },
         "database": {
-            "local": "shared_preferences"
+            "cloud_firestore": {
+                "project_id": "stock-154a6",
+                "structure": "users/{anonymousUid}/trade_logs/{id} | market_levels/latest | watchlist/data",
+                "auth": "Anonymous Auth — mỗi thiết bị có UID riêng"
+            },
+            "local_cache": "SharedPreferences CHỈ DùNG cho: Gemini API Key + migration_done flag",
+            "migration_key": "firebase_migration_done_v1 — khi true thì không migrate lại"
         }
     },
-    "database_schema": {
-        "summary": "Lưu trữ dữ liệu Watchlist dưới dạng local storage"
+    "android": {
+        "package_name": "com.example.manhan_stock_app",
+        "app_label": "Magic",
+        "app_icon": "assets/images/app_icon.png (converted from assets/images/logo.svg MU logo)",
+        "google_services_json": "android/app/google-services.json",
+        "firebase_project_id": "stock-154a6",
+        "device_tested": "CPH2769 (Android 16, API 36)"
     },
-    "api_endpoints": [],
+    "firebase_setup": {
+        "project_id": "stock-154a6",
+        "app_id_android": "1:77598238528:android:6558e8ff19c7b6950f3ca5",
+        "api_key": "AIzaSyDJVTQkyTT9hqg9-Bum4MXh7nUHZswLk9c",
+        "firestore_rules": "allow read, write: if request.auth != null && request.auth.uid == userId",
+        "firebase_options_dart": "lib/firebase_options.dart (tạo thủ công từ google-services.json)",
+        "anonymous_auth": "enabled"
+    },
+    "database_schema": {
+        "firestore_collections": [
+            {
+                "path": "users/{uid}/trade_logs/{id}",
+                "fields": "id, symbol, tradeDate, entryPrice, entryQuantity, entryReason, pattern, exitPrice, exitReason, exitDate, exitType, exitEmotion, aiReview",
+                "explained": "Mỗi giao dịch = 1 document. Sort by tradeDate desc."
+            },
+            {
+                "path": "users/{uid}/market_levels/latest",
+                "fields": "version (ISO8601), stocks[] (symbol, ht1, ht2, mt1, mt2, t0_tien_nho, t0_tien_lon, ...)",
+                "explained": "Chỉ lưu 1 bản HT/MT mới nhất. Overwrite khi import mới."
+            },
+            {
+                "path": "users/{uid}/watchlist/data",
+                "fields": "symbols: List<String>",
+                "explained": "Danh mục theo dõi. Default: [VCB, HPG, FPT, MBB]"
+            }
+        ],
+        "shared_preferences": {
+            "keys": [
+                "gemini_api_key",
+                "firebase_migration_done_v1"
+            ],
+            "explained": "SharedPreferences chỉ còn dùng cho Gemini API key và migration flag"
+        }
+    },
+    "api_endpoints": [
+        {
+            "path": "https://scanner.tradingview.com/vietnam/scan",
+            "method": "POST",
+            "explained": "Cào giá EOD cho mã mới thêm vào Watchlist."
+        },
+        {
+            "path": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+            "method": "POST",
+            "explained": "Gọi Gemini Flash để AI review 1 giao dịch. Cần user nhập API Key trong Settings."
+        },
+        {
+            "path": "Firebase Firestore REST (via cloud_firestore SDK)",
+            "method": "SDK",
+            "explained": "CRUD cho trade_logs, market_levels, watchlist qua FirebaseService singleton."
+        }
+    ],
     "business_rules": [
-        "Ứng dụng chỉ có Phase 1: Bảng giá, Biểu đồ, Split View, Watchlist, Market Overview",
-        "Split view chia theo chiều dọc (trên/dưới) phù hợp màn hình mobile"
+        {
+            "rule": "SL Tự Động",
+            "explained": "Khi nhập giá vào lệnh, app tự tính SL -4% (cắt 1/2 vị thế) và SL -8% (cắt hết) và hiển thị ngay."
+        },
+        {
+            "rule": "AI Coach Full Check 30 Tiêu Chí",
+            "explained": "Trước khi vào lệnh, phải tick đủ 30 tiêu chí chia 7 nhóm (A–G). Nhóm G (Quản lý rủi ro) bắt buộc 4/4. Nếu không đủ → nút Ghi lệnh bị khoá đỏ."
+        },
+        {
+            "rule": "Smart Alert HT/MT",
+            "explained": "AI Coach hiển thị Cách HT1/HT2 và Còn lên MT1/MT2 bằng màu sắc: xanh=tốt, cam=cẩn thận, đỏ=nguy. HT gần (≤2%)=xanh, xa(>5%)=đỏ. MT xa(≥8%)=xanh, gần(<4%)=đỏ."
+        },
+        {
+            "rule": "Mã không trong bảng",
+            "explained": "Nếu user nhập mã cổ phiếu không có trong bảng import → hiện card xám 'Cổ phiếu này không nằm trong danh sách khuyến nghị hôm nay'. Không show gợi ý linh tinh."
+        },
+        {
+            "rule": "Journal Level Card",
+            "explained": "Lệnh đang giữ (open) trong Journal sẽ hiện panel 2 cột: HT1/HT2 bên trái, MT1/MT2 bên phải. Màu = khoảng cách so với giá vào."
+        },
+        {
+            "rule": "Firebase Migration One-Time",
+            "explained": "MigrationService chạy 1 lần đầu khi update app. Load dữ liệu cũ từ SharedPreferences, upload Firestore, xóa SharedPreferences, set flag firebase_migration_done_v1=true."
+        },
+        {
+            "rule": "Firestore Offline Cache",
+            "explained": "Settings.persistenceEnabled=true → Firestore tự cache offline. Khi mất mạng app vẫn đọc được, sync khi có mạng."
+        }
     ],
     "features": [
-        "Bảng giá real-time",
-        "Biểu đồ nến OHLCV",
-        "Split View (2 biểu đồ cùng lúc trên/dưới)",
-        "Watchlist (Danh sách theo dõi)",
-        "Market Overview (VNINDEX, VN30)"
+        "📓 Trading Journal (CORE): Ghi lệnh vào/ra, SL tự tính, cảm xúc, PnL tự động, stats Win Rate — default screen khi mở app",
+        "🎨 Journal Redesign: _TradeTile có left color stripe (xanh=đang giữ, xanh lá=lãi, đỏ=lỗ), status chip ĐANG GIỮ/ĐÃ CHỐT, giá vào→ra với arrow, HT/MT dạng inline chips nhỏ gọn",
+        "💰 Unrealized PnL: Lệnh đang giữ tự fetch giá hiện tại từ fdata_server, tính % lãi/lỗ tạm thời realtime",
+        "🤖 AI Coach: Tab riêng — Full Check 30 tiêu chí Wyckoff/VSA/Ichimoku, nút bypass khi chưa đủ",
+        "🤖 AI Review: Gửi 1 giao dịch lên Gemini Flash, nhận nhận xét Đúng/Sai/Gợi ý dạng Markdown",
+        "📊 Bảng HT/MT: Import JSON từ ChatGPT (ảnh → JSON), Smart Alert — đồng bộ Firebase",
+        "🎨 Purple Theme: Accent tím #9B5FFC toàn app, NoSplash",
+        "📱 Bottom Nav 3 tabs: Nhật ký | AI Coach | Cài đặt (bỏ Thị trường, Bảng giá, Danh mục)",
+        "☁️ Firebase Cloud Sync: Trade logs, Market levels đồng bộ cloud",
+        "🏷️ App rebrand: Tên Magic, logo Manchester United",
+        "📡 fdata_server.py: DNSE realtime WebSocket + REST EOD cho VN30 + custom symbols"
     ],
+    "ai_coach_checklist": {
+        "summary": "30 tiêu chí chia 7 nhóm A-G + 6 cảnh báo tự động nhóm H",
+        "groups": {
+            "A": {
+                "name": "Thị trường chung",
+                "threshold": "≥2/3",
+                "items": 3
+            },
+            "B": {
+                "name": "Cổ phiếu & Giai đoạn",
+                "threshold": "≥3/4",
+                "items": 4
+            },
+            "C": {
+                "name": "Sức mạnh CP",
+                "threshold": "≥2/3",
+                "items": 3
+            },
+            "D": {
+                "name": "Wyckoff / VSA",
+                "threshold": "≥5/7",
+                "items": 7
+            },
+            "E": {
+                "name": "Ichimoku",
+                "threshold": "≥3/4",
+                "items": 4
+            },
+            "F": {
+                "name": "Nền giá VCP",
+                "threshold": "≥3/4",
+                "items": 4
+            },
+            "G": {
+                "name": "Quản lý rủi ro",
+                "threshold": "BẮT BUỘC 4/4",
+                "items": 4
+            },
+            "H": {
+                "name": "Cảnh báo tự động",
+                "items": 6,
+                "note": "Auto-detect, hiển thị popup"
+            }
+        }
+    },
     "knowledge_items": {
-        "patterns": [],
+        "patterns": [
+            "Riverpod StateNotifier + FutureProvider combination",
+            "Injecting JS into webview_flutter to manipulate third-party websites",
+            "TradeLog JSON serialization → Firestore documents (thay SharedPreferences)",
+            "Gemini Flash API gọi thẳng từ Flutter qua http package với system_instruction riêng biệt",
+            "ThousandInputFormatter tự viết kết hợp NumberFormat('#,##0', 'vi_VN') để format real-time",
+            "FutureBuilder<StockLevel?> trong journal tile để lookup async level data mà không chuyển StatelessWidget thành Stateful",
+            "MarketLevelService.parseJson() ép version = DateTime.now() để bỏ qua ngày trong file JSON",
+            "FirebaseService singleton pattern với init() gọi 1 lần trong main()",
+            "Firestore Source.serverAndCache với fallback Source.cache khi offline",
+            "MigrationService one-time pattern dùng SharedPreferences flag để check đã migrate chưa",
+            "flutter_launcher_icons + sharp-cli để convert SVG → PNG rồi generate all Android icon sizes"
+        ],
         "gotchas": [
-            "Terminal có thể không nhận lệnh 'flutter' ngay sau khi thêm vào danh sách biến môi trường, cần sử dụng đường dẫn tuyệt đối hoặc khởi động lại IDE/Terminal"
+            "GoRouter builder KHÔNG thể async — dùng FutureBuilder bên trong Widget thay vì async builder",
+            "flutter_markdown cần import riêng MarkdownStyleSheet với dark theme colors",
+            "Price unit mismatch: TradeLog.entryPrice lưu VND đầy đủ (60000), fdata_server candle close trả nghìn đồng (60.0). Nhân ×1000 khi hiển thị giá từ server",
+            "AppColors.accent = tím #9B5FFC — không dùng cho warning chip, dùng Colors.orange thay thế",
+            "PowerShell Set-Content -Encoding UTF8 thêm BOM vào file Dart → font chữ không hiển thị trên device. Dùng [System.IO.File]::WriteAllText với new UTF8Encoding($false)",
+            "RichText/TextSpan KHÔNG kế thừa font family từ ThemeData — phải dùng Row+Text hoặc Text.rich() với DefaultTextStyle",
+            "flutter_launcher_icons KHÔNG support SVG — phải convert sang PNG trước bằng sharp-cli",
+            "flutter run debug mode nhanh hơn build release rất nhiều — dùng debug cho test, chỉ release khi cần build APK",
+            "fdata_server endpoint: /api/quotes, /api/candles/{SYM}, /api/ws_status — KHÔNG phải /quotes hay /",
+            "Firestore offline: Khi không có mạng logcat hiện UNAVAILABLE là bình thường, Firestore tự dùng local cache"
         ],
         "conventions": [
-            "Mã chứng khoán DNSE phải viết HOA (VD: VCB, HPG)"
+            "Dùng AppColors extension cho toàn bộ mã màu — accent = #9B5FFC (tím)",
+            "Mọi screen dùng AppColors.background, AppColors.card, AppColors.border consistent",
+            "TradeLog ID = DateTime.now().millisecondsSinceEpoch.toString()",
+            "Bottom nav 3 tabs: Nhật ký (/journal) → AI Coach (/coach) → Cài đặt (/settings). initialLocation = /journal",
+            "AI Coach: không lock cứng — luôn có nút bypass để user tự quyết định",
+            "Warning chips dùng: increase=xanh, decrease=đỏ, Colors.orange=cảnh báo vừa, textSecondary=thông tin",
+            "HT màu logic: gần HT (0-3%)=xanh, 3-7%=cam, >7%=đỏ, phá HT(<0)=đỏ",
+            "MT màu logic: còn lên≥10%=xanh, 5-10%=cam, 0-5%=textSecondary, <0=đỏ",
+            "Journal _TradeTile: left stripe=stripeColor, đang giữ sort lên trên, đã chốt bên dưới",
+            "Giá hiển thị: luôn kiểm tra entryPrice>1000 để biết đang ở VND (60000) hay nghìn (60.0)",
+            "Tất cả Dart file tạo mới: dùng write_to_file tool, KHÔNG dùng PowerShell Set-Content (gây BOM)",
+            "FirebaseService dùng singleton instance, KHÔNG inject qua Riverpod"
         ]
     }
 }

@@ -19,34 +19,40 @@ class MarketOverviewScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Tổng quan thị trường'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Row(
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Builder(builder: (ctx) {
+            final open = isMarketOpen();
+            return Row(
               children: [
                 Container(
                   width: 6, height: 6,
-                  decoration: const BoxDecoration(
-                    color: AppColors.increase,
+                  decoration: BoxDecoration(
+                    color: open ? AppColors.increase : AppColors.textSecondary,
                     shape: BoxShape.circle,
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text(
-                  'Đang mở cửa',
+                Text(
+                  open ? 'Đang mở cửa' : 'Đã đóng cửa',
                   style: TextStyle(
                     fontSize: 11,
-                    color: AppColors.increase,
+                    color: open ? AppColors.increase : AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
+            );
+          }),
+        ),
+      ],
       ),
       body: RefreshIndicator(
         color: AppColors.accent,
-        onRefresh: () async => Future.delayed(const Duration(milliseconds: 800)),
+        onRefresh: () async {
+          ref.read(priceBoardProvider.notifier).refresh();
+          await Future.delayed(const Duration(milliseconds: 800));
+        },
         child: CustomScrollView(
           slivers: [
             // Chỉ số thị trường
@@ -287,23 +293,24 @@ class _MoverCard extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               quote.symbol,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
               ),
             ),
+            const SizedBox(height: 2),
             Text(
               quote.priceStr,
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: _color),
             ),
             Text(
               quote.changePctStr,
-              style: TextStyle(fontSize: 11, color: _color),
+              style: TextStyle(fontSize: 10, color: _color),
             ),
           ],
         ),

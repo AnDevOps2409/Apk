@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "77598238528",
+    "firebase_url": "https://stock-154a6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "stock-154a6",
+    "storage_bucket": "stock-154a6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77598238528:android:6558e8ff19c7b6950f3ca5",
+        "android_client_info": {
+          "package_name": "com.example.manhan_stock_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJVTQkyTT9hqg9-Bum4MXh7nUHZswLk9c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

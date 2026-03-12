@@ -1,0 +1,72 @@
+name: Build & Release APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:   # cho phép trigger thủ công từ GitHub UI
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout code ─────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Java (Android build cần) ────────────────────────────────────
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ── 3. Setup Flutter ──────────────────────────────────────────────────────
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.1'
+          channel: 'stable'
+          cache: true
+
+      # ── 4. Get dependencies ──────────────────────────────────────────────────
+      - name: Flutter pub get
+        run: flutter pub get
+
+      # ── 5. Build APK release ─────────────────────────────────────────────────
+      - name: Build APK
+        run: flutter build apk --release --no-tree-shake-icons
+
+      # ── 6. Đọc version từ pubspec.yaml ───────────────────────────────────────
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | tr -d '\r' | cut -d'+' -f1)
+          BUILD=$(grep '^version:' pubspec.yaml | sed 's/version: //' | tr -d '\r' | cut -d'+' -f2)
+          echo "version=v${VERSION}" >> $GITHUB_OUTPUT
+          echo "build=${BUILD}" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION}+${BUILD}" >> $GITHUB_OUTPUT
+
+      # ── 7. Rename APK ────────────────────────────────────────────────────────
+      - name: Rename APK
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk \
+             build/app/outputs/flutter-apk/dnse-stock-${{ steps.version.outputs.tag }}.apk
+
+      # ── 8. Create GitHub Release & Upload APK ────────────────────────────────
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: "Magic Stock App ${{ steps.version.outputs.version }}"
+          body: |
+            ## 📱 Tải APK
+
+            **Nhấn vào file `.apk` bên dưới để tải về và cài đặt.**
+
+            > Build tự động từ commit: ${{ github.sha }}
+          files: build/app/outputs/flutter-apk/dnse-stock-${{ steps.version.outputs.tag }}.apk
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

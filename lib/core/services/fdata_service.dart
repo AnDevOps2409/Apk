@@ -47,6 +47,25 @@ class FDataService {
     return raw.map((c) => RawCandle.fromJson(c)).toList();
   }
 
+  /// Lấy bid/ask orderbook 3 mức
+  Future<OrderBook> fetchOrderbook(String symbol) async {
+    final uri = Uri.parse('$baseUrl/api/orderbook/$symbol');
+    final res = await http.get(uri).timeout(const Duration(seconds: 5));
+    if (res.statusCode != 200) return OrderBook(symbol: symbol, bid: [], ask: []);
+    final body = json.decode(utf8.decode(res.bodyBytes));
+    return OrderBook.fromJson(body);
+  }
+
+  /// Lấy danh sách tick giao dịch gần nhất
+  Future<List<TickData>> fetchTicks(String symbol, {int limit = 50}) async {
+    final uri = Uri.parse('$baseUrl/api/ticks/$symbol?limit=$limit');
+    final res = await http.get(uri).timeout(const Duration(seconds: 5));
+    if (res.statusCode != 200) return [];
+    final body = json.decode(utf8.decode(res.bodyBytes));
+    final List<dynamic> raw = body['ticks'] ?? [];
+    return raw.map((t) => TickData.fromJson(t)).toList();
+  }
+
   /// Lấy chỉ số thị trường
   Future<List<MarketIndex>> fetchIndices() async {
     final uri = Uri.parse('$baseUrl/api/indices');
@@ -59,27 +78,29 @@ class FDataService {
   }
 
   StockQuote _mapQuote(Map<String, dynamic> q) {
-    final price  = (q['price']  as num).toDouble();
-    final ref    = (q['reference'] as num).toDouble();
-    final ceil   = (q['ceiling'] as num).toDouble();
-    final floor  = (q['floor'] as num).toDouble();
-    final change = (q['change'] as num).toDouble();
-    final pct    = (q['change_pct'] as num).toDouble();
-    final vol    = (q['volume'] as num).toInt();
+    double n(String k, [double def = 0]) =>
+        (q[k] as num?)?.toDouble() ?? def;
+    final price  = n('price');
+    final ref    = n('reference');
+    final ceil   = n('ceiling',   price * 1.07);
+    final floor  = n('floor',     price * 0.93);
+    final change = n('change',    price - ref);
+    final pct    = n('change_pct', ref > 0 ? (price - ref) / ref * 100 : 0);
+    final vol    = (q['volume'] as num?)?.toInt() ?? 0;
 
     return StockQuote(
-      symbol: q['symbol'] as String,
+      symbol: q['symbol'] as String? ?? '',
       exchange: 'HOSE',
-      reference: ref,
-      ceiling: ceil,
-      floor: floor,
-      open: (q['open'] as num).toDouble(),
-      high: (q['high'] as num).toDouble(),
-      low: (q['low'] as num).toDouble(),
-      price: price,
-      change: change,
+      reference: ref > 0 ? ref : price,
+      ceiling:   ceil > 0 ? ceil : price * 1.07,
+      floor:     floor > 0 ? floor : price * 0.93,
+      open:      n('open',  price),
+      high:      n('high',  price),
+      low:       n('low',   price),
+      price:     price,
+      change:    change,
       changePercent: pct,
-      volume: vol,
+      volume:    vol,
       totalValue: (price * vol / 1000).round(),
       updatedAt: DateTime.now(),
     );
@@ -141,4 +162,60 @@ class RawCandle {
       t % 100,
     );
   }
+}
+
+/// Một mức giá trong orderbook (Bid hoặc Ask)
+class PriceLevel {
+  final double price;
+  final int qty;
+  const PriceLevel({required this.price, required this.qty});
+  factory PriceLevel.fromJson(Map<String, dynamic> j) => PriceLevel(
+    price: (j['price'] as num).toDouble(),
+    qty:   (j['qty']   as num).toInt(),
+  );
+}
+
+/// Bid/Ask orderbook 3 mức từ DNSE realtime
+class OrderBook {
+  final String symbol;
+  final List<PriceLevel> bid;
+  final List<PriceLevel> ask;
+  final int? totalBidQty;
+  final int? totalAskQty;
+  final int? updatedAt;
+
+  const OrderBook({
+    required this.symbol,
+    required this.bid,
+    required this.ask,
+    this.totalBidQty,
+    this.totalAskQty,
+    this.updatedAt,
+  });
+
+  factory OrderBook.fromJson(Map<String, dynamic> j) => OrderBook(
+    symbol:      j['symbol'] as String? ?? '',
+    bid:         ((j['bid']  as List?) ?? []).map((e) => PriceLevel.fromJson(e as Map<String, dynamic>)).toList(),
+    ask:         ((j['ask']  as List?) ?? []).map((e) => PriceLevel.fromJson(e as Map<String, dynamic>)).toList(),
+    totalBidQty: (j['totalBidQty'] as num?)?.toInt(),
+    totalAskQty: (j['totalAskQty'] as num?)?.toInt(),
+    updatedAt:   (j['updatedAt']   as num?)?.toInt(),
+  );
+
+  bool get isEmpty => bid.isEmpty && ask.isEmpty;
+}
+
+/// Một tick giao dịch realtime
+class TickData {
+  final int time;
+  final double price;
+  final int qty;
+
+  const TickData({required this.time, required this.price, required this.qty});
+
+  factory TickData.fromJson(Map<String, dynamic> j) => TickData(
+    time:  (j['time']  as num).toInt(),
+    price: (j['price'] as num).toDouble(),
+    qty:   (j['qty']   as num).toInt(),
+  );
 }
