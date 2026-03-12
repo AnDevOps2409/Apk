@@ -10,7 +10,8 @@ jobs:
     name: Build APK
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # cần để tạo GitHub Release & upload APK
+      contents: write   # tạo GitHub Release & upload APK
+      actions: read     # download actions/setup-java, subosito/flutter-action trên private repo
 
     steps:
       # ── 1. Checkout code ─────────────────────────────────────────────────────
