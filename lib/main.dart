@@ -8,6 +8,7 @@ import 'core/theme/app_theme.dart';
 import 'core/providers/stock_providers.dart';
 import 'core/services/firebase_service.dart';
 import 'core/services/migration_service.dart';
+import 'core/auth_wrapper.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -52,11 +53,13 @@ class DnseStockApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Magic',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark,
-      routerConfig: appRouter,
+    return AuthWrapper(
+      child: MaterialApp.router(
+        title: 'Magic',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.dark,
+        routerConfig: appRouter,
+      ),
     );
   }
 }

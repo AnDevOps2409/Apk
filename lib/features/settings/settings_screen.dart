@@ -1,8 +1,10 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/models/market_level.dart';
 import '../../core/providers/stock_providers.dart';
@@ -39,13 +41,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('Cài đặt')),
+      appBar: AppBar(title: const Text('CÃ i Ä‘áº·t')),
       body: ListView(
         padding: EdgeInsets.fromLTRB(16, 16, 16, 100 + MediaQuery.of(context).padding.bottom),
         children: [
 
-          // ── FData Server Config (luôn hiện) ──
-          const _SectionLabel('📶 DNSE SERVER'),
+          // â”€â”€ FData Server Config (luÃ´n hiá»‡n) â”€â”€
+          const _SectionLabel('ðŸ“¶ DNSE SERVER'),
           const SizedBox(height: 8),
           // IP input
           Container(
@@ -67,7 +69,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       hintText: 'http://192.168.1.x:8765',
                       hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 12),
                       border: InputBorder.none,
-                      labelText: 'Địa chỉ PC (IP:Port)',
+                      labelText: 'Äá»‹a chá»‰ PC (IP:Port)',
                       labelStyle: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                     ),
                     onChanged: (v) {
@@ -86,19 +88,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             loading: () => _StatusRow(
               icon: Icons.sync_rounded,
               color: AppColors.accent,
-              text: 'Đang kết nối đến server...',
+              text: 'Äang káº¿t ná»‘i Ä‘áº¿n server...',
             ),
             data: (ok) => _StatusRow(
               icon: ok ? Icons.check_circle_rounded : Icons.error_rounded,
               color: ok ? AppColors.increase : AppColors.decrease,
               text: ok
-                  ? 'Kết nối thành công ✅'
-                  : 'Không kết nối được ❌\nKiểm tra:\n  • PC và điện thoại cùng WiFi\n  • fdata_server.py đang chạy\n  • Firewall cho phép port 8765',
+                  ? 'Káº¿t ná»‘i thÃ nh cÃ´ng âœ…'
+                  : 'KhÃ´ng káº¿t ná»‘i Ä‘Æ°á»£c âŒ\nKiá»ƒm tra:\n  â€¢ PC vÃ  Ä‘iá»‡n thoáº¡i cÃ¹ng WiFi\n  â€¢ fdata_server.py Ä‘ang cháº¡y\n  â€¢ Firewall cho phÃ©p port 8765',
             ),
             error: (e, _) => _StatusRow(
               icon: Icons.error_outline_rounded,
               color: AppColors.decrease,
-              text: 'Lỗi: $e',
+              text: 'Lá»—i: $e',
             ),
           ),
 
@@ -111,33 +113,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             onPressed: () => ref.invalidate(serverStatusProvider),
             icon: const Icon(Icons.refresh_rounded, size: 16),
-            label: const Text('Kiểm tra kết nối lại'),
+            label: const Text('Kiá»ƒm tra káº¿t ná»‘i láº¡i'),
           ),
 
           const SizedBox(height: 24),
           _HowToCard(),
 
-          // ── AI Coach ──
+          // â”€â”€ AI Coach â”€â”€
           const SizedBox(height: 24),
-          const _SectionLabel('🤖 AI COACH'),
+          const _SectionLabel('ðŸ¤– AI COACH'),
           const SizedBox(height: 8),
           _GeminiKeyTile(),
 
-          // ── Bảng Phân Tích HT/MT ──
+          // â”€â”€ Báº£ng PhÃ¢n TÃ­ch HT/MT â”€â”€
           const SizedBox(height: 24),
-          const _SectionLabel('📊 BẢNG PHÂN TÍCH HỖ TRỢ / MỤC TIÊU'),
+          const _SectionLabel('ðŸ“Š Báº¢NG PHÃ‚N TÃCH Há»– TRá»¢ / Má»¤C TIÃŠU'),
           const SizedBox(height: 8),
           _MarketLevelsSection(),
 
-          // ── Cập nhật ứng dụng ──
+          // â”€â”€ Cáº­p nháº­t á»©ng dá»¥ng â”€â”€
           const SizedBox(height: 24),
-          const _SectionLabel('⬆️ CẬP NHẬT ỨNG DỤNG'),
+          const _SectionLabel('â¬†ï¸ Cáº¬P NHáº¬T á»¨NG Dá»¤NG'),
           const SizedBox(height: 8),
           const _UpdateSection(),
 
-          // ── About ──
+          // â”€â”€ TÃ i khoáº£n â”€â”€
           const SizedBox(height: 24),
-          const _SectionLabel('THÔNG TIN'),
+          const _SectionLabel('ðŸ‘¤ TÃ€I KHOáº¢N'),
+          const SizedBox(height: 8),
+          _AccountSection(),
+
+          // â”€â”€ About â”€â”€
+          const SizedBox(height: 24),
+          const _SectionLabel('THÃ”NG TIN'),
           const SizedBox(height: 8),
           Card(
             child: Padding(
@@ -160,7 +168,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 }
 
 
-// ─── Sub Widgets ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Sub Widgets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _SectionLabel extends StatelessWidget {
   final String text;
@@ -212,15 +220,15 @@ class _HowToCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text('Cách chạy FData Server', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+            Text('CÃ¡ch cháº¡y FData Server', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
             SizedBox(height: 8),
             Text(
-              '1. Mở CMD/PowerShell trên PC\n'
-              '2. Chạy lệnh:\n'
+              '1. Má»Ÿ CMD/PowerShell trÃªn PC\n'
+              '2. Cháº¡y lá»‡nh:\n'
               '   python D:\\ChungKhoan\\fdata_server.py\n\n'
-              '3. Xem IP của PC hiển thị trong terminal\n'
-              '4. Nhập IP đó vào ô "Địa chỉ PC" bên trên\n'
-              '5. Nhấn "Kiểm tra kết nối"',
+              '3. Xem IP cá»§a PC hiá»ƒn thá»‹ trong terminal\n'
+              '4. Nháº­p IP Ä‘Ã³ vÃ o Ã´ "Äá»‹a chá»‰ PC" bÃªn trÃªn\n'
+              '5. Nháº¥n "Kiá»ƒm tra káº¿t ná»‘i"',
               style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.7),
             ),
           ],
@@ -275,7 +283,7 @@ class _GeminiKeyTileState extends State<_GeminiKeyTile> {
         const Text('Gemini API Key',
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
         const SizedBox(height: 4),
-        const Text('Dùng để AI Review giao dịch. Lấy key tại aistudio.google.com',
+        const Text('DÃ¹ng Ä‘á»ƒ AI Review giao dá»‹ch. Láº¥y key táº¡i aistudio.google.com',
             style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
         const SizedBox(height: 10),
         Row(
@@ -314,7 +322,7 @@ class _GeminiKeyTileState extends State<_GeminiKeyTile> {
                 backgroundColor: _saved ? AppColors.increase : AppColors.accent,
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               ),
-              child: Text(_saved ? '✓ Đã lưu' : 'Lưu',
+              child: Text(_saved ? 'âœ“ ÄÃ£ lÆ°u' : 'LÆ°u',
                   style: const TextStyle(color: Colors.white, fontSize: 12)),
             ),
           ],
@@ -324,7 +332,7 @@ class _GeminiKeyTileState extends State<_GeminiKeyTile> {
   );
 }
 
-// ─── Market Levels Section ────────────────────────────────────────────────────
+// â”€â”€â”€ Market Levels Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _MarketLevelsSection extends StatefulWidget {
   @override
@@ -364,7 +372,7 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
       }
 
       final bytes = result.files.first.bytes;
-      if (bytes == null) throw Exception('Không đọc được file');
+      if (bytes == null) throw Exception('KhÃ´ng Ä‘á»c Ä‘Æ°á»£c file');
 
       final jsonStr = utf8.decode(bytes);
       final version = _svc.parseJson(jsonStr);
@@ -372,10 +380,10 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
       await _loadHistory();
 
       setState(() {
-        _successMsg = '✅ Đã import ${version.stocks.length} mã — ${version.displayDate}';
+        _successMsg = 'âœ… ÄÃ£ import ${version.stocks.length} mÃ£ â€” ${version.displayDate}';
       });
     } catch (e) {
-      setState(() => _errorMsg = 'Lỗi: $e\n\nHãy kiểm tra format JSON và thử lại.');
+      setState(() => _errorMsg = 'Lá»—i: $e\n\nHÃ£y kiá»ƒm tra format JSON vÃ  thá»­ láº¡i.');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -401,13 +409,13 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Bảng HT/MT + Dòng Tiền',
+            'Báº£ng HT/MT + DÃ²ng Tiá»n',
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
           ),
           const SizedBox(height: 4),
           const Text(
-            'Dùng ChatGPT extract ảnh bảng sáng → tải JSON về → import vào đây.\n'
-            'AI Coach sẽ tự tính khoảng cách HT/MT và cảnh báo thông minh khi anh nhập giá.',
+            'DÃ¹ng ChatGPT extract áº£nh báº£ng sÃ¡ng â†’ táº£i JSON vá» â†’ import vÃ o Ä‘Ã¢y.\n'
+            'AI Coach sáº½ tá»± tÃ­nh khoáº£ng cÃ¡ch HT/MT vÃ  cáº£nh bÃ¡o thÃ´ng minh khi anh nháº­p giÃ¡.',
             style: TextStyle(fontSize: 11, color: AppColors.textSecondary, height: 1.6),
           ),
 
@@ -430,7 +438,7 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Version hiện tại: ${latest.displayDate} — ${latest.stocks.length} mã',
+                      'Version hiá»‡n táº¡i: ${latest.displayDate} â€” ${latest.stocks.length} mÃ£',
                       style: const TextStyle(fontSize: 12, color: AppColors.increase),
                     ),
                   ),
@@ -451,7 +459,7 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
                   const Icon(Icons.info_outline_rounded, color: AppColors.accent, size: 16),
                   const SizedBox(width: 8),
                   const Expanded(
-                    child: Text('Chưa có bảng phân tích — Import JSON để bắt đầu',
+                    child: Text('ChÆ°a cÃ³ báº£ng phÃ¢n tÃ­ch â€” Import JSON Ä‘á»ƒ báº¯t Ä‘áº§u',
                         style: TextStyle(fontSize: 12, color: AppColors.accent)),
                   ),
                 ],
@@ -479,7 +487,7 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
                     )
                   : const Icon(Icons.upload_file_rounded, size: 16, color: Colors.white),
               label: Text(
-                _loading ? 'Đang import...' : '📂 Import JSON bảng mới',
+                _loading ? 'Äang import...' : 'ðŸ“‚ Import JSON báº£ng má»›i',
                 style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
               ),
               style: ElevatedButton.styleFrom(
@@ -492,7 +500,7 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
 
           if (_history.isNotEmpty) ...[
             const SizedBox(height: 16),
-            const Text('📜 Lịch sử versions',
+            const Text('ðŸ“œ Lá»‹ch sá»­ versions',
                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
             const SizedBox(height: 6),
             ..._history.asMap().entries.map((entry) {
@@ -526,7 +534,7 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
                                     color: AppColors.accent,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Text('MỚI NHẤT',
+                                  child: const Text('Má»šI NHáº¤T',
                                       style: TextStyle(fontSize: 9, color: Colors.white, fontWeight: FontWeight.w700)),
                                 ),
                               Text(v.displayDate,
@@ -536,7 +544,7 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
                                   )),
                             ],
                           ),
-                          Text('${v.stocks.length} mã',
+                          Text('${v.stocks.length} mÃ£',
                               style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
                         ],
                       ),
@@ -558,20 +566,20 @@ class _MarketLevelsSectionState extends State<_MarketLevelsSection> {
   }
 }
 
-// ── ChatGPT Prompt Card ──────────────────────────────────────────────────────
+// â”€â”€ ChatGPT Prompt Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _ChatGptPromptCard extends StatelessWidget {
   static const _promptText =
-      'Đây là bảng phân tích chứng khoán. Hãy đọc và trả về JSON format sau'
-      ' (không giải thích thêm):\n\n'
+      'ÄÃ¢y lÃ  báº£ng phÃ¢n tÃ­ch chá»©ng khoÃ¡n. HÃ£y Ä‘á»c vÃ  tráº£ vá» JSON format sau'
+      ' (khÃ´ng giáº£i thÃ­ch thÃªm):\n\n'
       '{ "version": "<ISO datetime>", "stocks": [\n'
       '  { "symbol": "GAS", "group": "uu_tien",\n'
       '    "t0_tien_nho": -2, "t0_tien_lon": -4,\n'
       '    "tong_tien_nho": -1, "tong_tien_lon": 9,\n'
       '    "ht1": 106, "ht2": 101, "mt1": 120, "mt2": 130 }\n'
       '] }\n\n'
-      'Lưu ý: "101-102" → 101.5 | "120+-" → 120 | '
-      'group: "uu_tien" hoặc "khac" | dùng 0 nếu không có số.';
+      'LÆ°u Ã½: "101-102" â†’ 101.5 | "120+-" â†’ 120 | '
+      'group: "uu_tien" hoáº·c "khac" | dÃ¹ng 0 náº¿u khÃ´ng cÃ³ sá»‘.';
 
   @override
   Widget build(BuildContext context) {
@@ -587,7 +595,7 @@ class _ChatGptPromptCard extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
-            child: const Text('💬 Prompt cho ChatGPT (nhấn giữ để copy):',
+            child: const Text('ðŸ’¬ Prompt cho ChatGPT (nháº¥n giá»¯ Ä‘á»ƒ copy):',
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
@@ -612,7 +620,7 @@ class _ChatGptPromptCard extends StatelessWidget {
   }
 }
 
-// ─── Update Section ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Update Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 enum _UpdateState { idle, checking, upToDate, updateAvailable, downloading, readyToInstall, error }
 
@@ -682,7 +690,7 @@ class _UpdateSectionState extends State<_UpdateSection> {
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
-                  'Cập nhật ứng dụng',
+                  'Cáº­p nháº­t á»©ng dá»¥ng',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                 ),
               ),
@@ -693,7 +701,7 @@ class _UpdateSectionState extends State<_UpdateSection> {
                     color: AppColors.increase.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text('Mới nhất ✓',
+                  child: const Text('Má»›i nháº¥t âœ“',
                       style: TextStyle(fontSize: 10, color: AppColors.increase, fontWeight: FontWeight.w700)),
                 ),
             ],
@@ -714,7 +722,7 @@ class _UpdateSectionState extends State<_UpdateSection> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Có phiên bản mới: v$_latestVersion',
+                      'CÃ³ phiÃªn báº£n má»›i: v$_latestVersion',
                       style: const TextStyle(fontSize: 12, color: AppColors.accent),
                     ),
                   ),
@@ -725,14 +733,14 @@ class _UpdateSectionState extends State<_UpdateSection> {
 
           if (_state == _UpdateState.error) ...[
             const SizedBox(height: 8),
-            Text('❌ $_errorMsg', style: const TextStyle(fontSize: 11, color: AppColors.decrease, height: 1.5)),
+            Text('âŒ $_errorMsg', style: const TextStyle(fontSize: 11, color: AppColors.decrease, height: 1.5)),
           ],
 
           if (_state == _UpdateState.downloading) ...[
             const SizedBox(height: 12),
             Row(
               children: [
-                const Text('Đang tải...', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                const Text('Äang táº£i...', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
                 const SizedBox(width: 8),
                 Text(
                   '${(_downloadProgress * 100).toStringAsFixed(0)}%',
@@ -765,7 +773,7 @@ class _UpdateSectionState extends State<_UpdateSection> {
                 children: [
                   Icon(Icons.download_done_rounded, color: AppColors.increase, size: 16),
                   SizedBox(width: 8),
-                  Text('Tải xong! Nhấn "Cài đặt" để tiếp tục.',
+                  Text('Táº£i xong! Nháº¥n "CÃ i Ä‘áº·t" Ä‘á»ƒ tiáº¿p tá»¥c.',
                       style: TextStyle(fontSize: 12, color: AppColors.increase)),
                 ],
               ),
@@ -786,25 +794,25 @@ class _UpdateSectionState extends State<_UpdateSection> {
   Widget _buildButton() {
     switch (_state) {
       case _UpdateState.checking:
-        return _btn(icon: null, label: 'Đang kiểm tra...', onPressed: null, loading: true);
+        return _btn(icon: null, label: 'Äang kiá»ƒm tra...', onPressed: null, loading: true);
       case _UpdateState.downloading:
-        return _btn(icon: null, label: 'Đang tải APK...', onPressed: null, loading: true);
+        return _btn(icon: null, label: 'Äang táº£i APK...', onPressed: null, loading: true);
       case _UpdateState.updateAvailable:
         return _btn(
           icon: Icons.download_rounded,
-          label: 'Tải bản mới (v$_latestVersion)',
+          label: 'Táº£i báº£n má»›i (v$_latestVersion)',
           onPressed: _download,
           color: AppColors.increase,
         );
       case _UpdateState.readyToInstall:
         return _btn(
           icon: Icons.install_mobile_rounded,
-          label: 'Cài đặt ngay 🚀',
+          label: 'CÃ i Ä‘áº·t ngay ðŸš€',
           onPressed: () => _svc.installApk(_apkPath),
           color: AppColors.increase,
         );
       default:
-        return _btn(icon: Icons.search_rounded, label: 'Kiểm tra cập nhật', onPressed: _checkUpdate);
+        return _btn(icon: Icons.search_rounded, label: 'Kiá»ƒm tra cáº­p nháº­t', onPressed: _checkUpdate);
     }
   }
 
@@ -827,6 +835,67 @@ class _UpdateSectionState extends State<_UpdateSection> {
         padding: const EdgeInsets.symmetric(vertical: 11),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
+    );
+  }
+}
+
+class _AccountSection extends StatefulWidget {
+  const _AccountSection();
+  @override
+  State<_AccountSection> createState() => _AccountSectionState();
+}
+
+class _AccountSectionState extends State<_AccountSection> {
+  bool _signingOut = false;
+
+  Future<void> _signOut() async {
+    setState(() => _signingOut = true);
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const SizedBox.shrink();
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.border, width: 0.5),
+      ),
+      child: Row(children: [
+        CircleAvatar(
+          radius: 22,
+          backgroundColor: AppColors.accent.withValues(alpha: 0.15),
+          backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+          child: user.photoURL == null
+              ? const Icon(Icons.person_rounded, color: AppColors.accent, size: 24)
+              : null,
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(user.displayName ?? 'Nguoi dung',
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary)),
+            if (user.email != null)
+              Text(user.email!,
+                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+          ],
+        )),
+        if (_signingOut)
+          const SizedBox(width: 20, height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.decrease))
+        else
+          TextButton(
+            onPressed: _signOut,
+            style: TextButton.styleFrom(foregroundColor: AppColors.decrease),
+            child: const Text('Dang xuat', style: TextStyle(fontSize: 12)),
+          ),
+      ]),
     );
   }
 }
