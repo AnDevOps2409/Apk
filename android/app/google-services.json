@@ -13,7 +13,20 @@
           "package_name": "com.example.manhan_stock_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "77598238528-0341g3gqeg05vmlps6g56vp6ap6nbfcj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.manhan_stock_app",
+            "certificate_hash": "c0fa61e4802bc9494844331bda9c68bfe55fb05d"
+          }
+        },
+        {
+          "client_id": "77598238528-tn8fdot6mh5clv95102ss364h86v1meq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDJVTQkyTT9hqg9-Bum4MXh7nUHZswLk9c"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77598238528-tn8fdot6mh5clv95102ss364h86v1meq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
