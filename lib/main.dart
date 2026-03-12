@@ -7,7 +7,6 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/stock_providers.dart';
 import 'core/services/firebase_service.dart';
-import 'core/services/migration_service.dart';
 import 'core/auth_wrapper.dart';
 import 'firebase_options.dart';
 
@@ -17,9 +16,6 @@ void main() async {
   // ── Firebase Init ────────────────────────────────────────────────────────
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseService.instance.init();
-
-  // Migrate dữ liệu cũ từ SharedPreferences lên Firestore (chỉ chạy 1 lần)
-  await MigrationService.runIfNeeded();
 
   // ── SharedPreferences (chỉ dùng cho Gemini API Key + migration flag) ─────
   final prefs = await SharedPreferences.getInstance();
