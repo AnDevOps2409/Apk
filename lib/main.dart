@@ -14,14 +14,28 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ── Firebase Init ────────────────────────────────────────────────────────
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseService.instance.init();
+  // Bắt mọi lỗi Flutter không handled
+  FlutterError.onError = (details) {
+    debugPrint('Flutter error: ${details.exception}');
+  };
+
+  // ── Firebase Init ─────────────────────────────────────────────────────────
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await FirebaseService.instance.init();
+  } catch (e) {
+    debugPrint('Firebase init error: $e');
+    // Vẫn tiếp tục chạy app — hiển thị UI rồi báo lỗi sau
+  }
 
   // ── SharedPreferences ─────────────────────────────────────────────────────
-  final prefs = await SharedPreferences.getInstance();
+  SharedPreferences? prefs;
+  try {
+    prefs = await SharedPreferences.getInstance();
+  } catch (e) {
+    debugPrint('SharedPreferences error: $e');
+  }
 
-  // Lock portrait orientation
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -37,7 +51,8 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
+        if (prefs != null)
+          sharedPreferencesProvider.overrideWithValue(prefs),
       ],
       child: const DnseStockApp(),
     ),
@@ -52,20 +67,29 @@ class DnseStockApp extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // ── Đang kiểm tra trạng thái auth ─────────────────────────────────
+        // ── Đang check auth ───────────────────────────────────────────────
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: AppTheme.dark,
             home: const Scaffold(
+              backgroundColor: AppColors.background,
               body: Center(
-                child: CircularProgressIndicator(color: AppColors.accent),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: AppColors.accent),
+                    SizedBox(height: 16),
+                    Text('Đang khởi động...',
+                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                  ],
+                ),
               ),
             ),
           );
         }
 
-        // ── Chưa đăng nhập → Login ─────────────────────────────────────────
+        // ── Chưa đăng nhập ────────────────────────────────────────────────
         if (!snapshot.hasData || snapshot.data == null) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -74,7 +98,7 @@ class DnseStockApp extends StatelessWidget {
           );
         }
 
-        // ── Đã đăng nhập → vào app ─────────────────────────────────────────
+        // ── Đã đăng nhập ──────────────────────────────────────────────────
         return MaterialApp.router(
           title: 'Magic',
           debugShowCheckedModeBanner: false,
