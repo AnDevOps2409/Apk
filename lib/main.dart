@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/stock_providers.dart';
 import 'core/services/firebase_service.dart';
-import 'core/auth_wrapper.dart';
+import 'features/auth/login_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,7 +18,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseService.instance.init();
 
-  // ── SharedPreferences (chỉ dùng cho Gemini API Key + migration flag) ─────
+  // ── SharedPreferences ─────────────────────────────────────────────────────
   final prefs = await SharedPreferences.getInstance();
 
   // Lock portrait orientation
@@ -26,7 +27,6 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Status bar style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -49,13 +49,39 @@ class DnseStockApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthWrapper(
-      child: MaterialApp.router(
-        title: 'Magic',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.dark,
-        routerConfig: appRouter,
-      ),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // ── Đang kiểm tra trạng thái auth ─────────────────────────────────
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.dark,
+            home: const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(color: AppColors.accent),
+              ),
+            ),
+          );
+        }
+
+        // ── Chưa đăng nhập → Login ─────────────────────────────────────────
+        if (!snapshot.hasData || snapshot.data == null) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.dark,
+            home: const LoginScreen(),
+          );
+        }
+
+        // ── Đã đăng nhập → vào app ─────────────────────────────────────────
+        return MaterialApp.router(
+          title: 'Magic',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.dark,
+          routerConfig: appRouter,
+        );
+      },
     );
   }
 }
