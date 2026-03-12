@@ -14,27 +14,18 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Bắt mọi lỗi Flutter không handled
   FlutterError.onError = (details) {
     debugPrint('Flutter error: ${details.exception}');
   };
 
-  // ── Firebase Init ─────────────────────────────────────────────────────────
   try {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     await FirebaseService.instance.init();
   } catch (e) {
     debugPrint('Firebase init error: $e');
-    // Vẫn tiếp tục chạy app — hiển thị UI rồi báo lỗi sau
   }
 
-  // ── SharedPreferences ─────────────────────────────────────────────────────
-  SharedPreferences? prefs;
-  try {
-    prefs = await SharedPreferences.getInstance();
-  } catch (e) {
-    debugPrint('SharedPreferences error: $e');
-  }
+  final prefs = await SharedPreferences.getInstance();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -51,8 +42,7 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        if (prefs != null)
-          sharedPreferencesProvider.overrideWithValue(prefs),
+        sharedPreferencesProvider.overrideWithValue(prefs),
       ],
       child: const DnseStockApp(),
     ),
@@ -67,7 +57,7 @@ class DnseStockApp extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // ── Đang check auth ───────────────────────────────────────────────
+        // Loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -75,21 +65,12 @@ class DnseStockApp extends StatelessWidget {
             home: const Scaffold(
               backgroundColor: AppColors.background,
               body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(color: AppColors.accent),
-                    SizedBox(height: 16),
-                    Text('Đang khởi động...',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-                  ],
-                ),
+                child: CircularProgressIndicator(color: AppColors.accent),
               ),
             ),
           );
         }
-
-        // ── Chưa đăng nhập ────────────────────────────────────────────────
+        // Chưa đăng nhập
         if (!snapshot.hasData || snapshot.data == null) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -97,8 +78,7 @@ class DnseStockApp extends StatelessWidget {
             home: const LoginScreen(),
           );
         }
-
-        // ── Đã đăng nhập ──────────────────────────────────────────────────
+        // Đã đăng nhập
         return MaterialApp.router(
           title: 'Magic',
           debugShowCheckedModeBanner: false,
