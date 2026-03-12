@@ -1,0 +1,5 @@
+# FData Server v2 dependencies
+websockets>=12.0
+msgpack>=1.0.8
+python-dotenv>=1.0.0
+# paho-mqtt>=2.0.0  # KHÔNG dùng nữa (dùng DNSE WebSocket SDK thay thế)
