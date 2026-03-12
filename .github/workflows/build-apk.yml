@@ -39,6 +39,9 @@ jobs:
       # ── 5. Build APK release ─────────────────────────────────────────────────
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons
+        env:
+          FLUTTER_SUPPRESS_ANALYTICS: true
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
       # ── 6. Đọc version từ pubspec.yaml ───────────────────────────────────────
       - name: Get version
